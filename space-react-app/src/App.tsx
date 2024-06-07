@@ -1,13 +1,18 @@
 
-import { Route, Router, Routes } from 'react-router-dom'
+import {BrowserRouter, Route,  Routes } from 'react-router-dom'
 import './App.css'
 import Nav from './components/nav'
+import Home from './components/Home'
+import Forms from './components/Forms'
+import Office from './components/Office'
 
 function App() {
 
   return (
-    <Router>
+    <BrowserRouter>
       <Nav />
+      <div className="App">
+      <div className="Content">
    <Routes>
           <Route  path="/home" element={<Home />}>
           </Route>
@@ -18,7 +23,9 @@ function App() {
           <Route path="*">
           </Route>
         </Routes>
-  </Router>
+        </div>
+        </div>
+  </BrowserRouter>
   )
 }
 
