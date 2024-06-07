@@ -1,6 +1,8 @@
 const Forms = () => {
+    return(
 <div>
-        Ciao
+        Forms
     </div>
+    )
 }
 export default Forms;

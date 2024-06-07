@@ -20,7 +20,7 @@ function App() {
           </Route>
           <Route path="/forms" element={<Forms />}>
           </Route>
-          <Route path="*">
+          <Route path="*" element={<Home />}>
           </Route>
         </Routes>
         </div>
