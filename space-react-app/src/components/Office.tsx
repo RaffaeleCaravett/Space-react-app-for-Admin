@@ -1,7 +1,7 @@
 const Office = () => {
     return(
         <div>
-                Ciao
+                Office
             </div>
             )
 }

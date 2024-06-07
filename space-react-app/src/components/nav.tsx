@@ -15,7 +15,7 @@ const Nav = () =>{
          <Link to={'/office'}>Office</Link> 
         </div>
         <div className="col-md-4 p-2">
-        <Link to={'/forms'}></Link>  Login
+        <Link to={'/forms'}>Login</Link>  
         </div>
     </div>
 </nav>
