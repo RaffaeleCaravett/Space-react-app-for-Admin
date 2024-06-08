@@ -28,8 +28,12 @@ navigate('/home')
          <Link to={'/office'}>Office</Link> 
         </div>
         <div className="col-md-4 p-2">
+<<<<<<< HEAD
         {!isLoggedIn &&< Link to={'/forms'}>Login</Link>}  
         {isLoggedIn &&< Link to={'/forms'} onClick={()=>{logout()}}>Logout</Link>}  
+=======
+        <Link to={'/forms'}>Login</Link>  
+>>>>>>> 0ba63a0a7866b74fa574f3a6aff2ba29eaad6f31
         </div>
     </div>
 </nav>
