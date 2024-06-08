@@ -5,6 +5,7 @@ import Nav from './components/nav'
 import Home from './components/Home'
 import Forms from './components/Forms'
 import Office from './components/Office'
+import { Provider } from 'react-redux'
 
 function App() {
 

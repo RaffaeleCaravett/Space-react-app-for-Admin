@@ -4,7 +4,7 @@ export const accessTokenSlice = createSlice({
     name:'accessToken',
     initialState:{
         accessToken:'',
-        isLoggedIn:false
+        isLoggedIn:true
     },
     reducers:{
         setAccessToken: (accessToken,action)=>{
