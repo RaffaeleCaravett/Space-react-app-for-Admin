@@ -1,22 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const SingleCard = (props:any) => {
+const SingleCard = (prop:any) => {
 
-const cards = props.content;
-console.log(cards)
+const card = prop;
 return (
-    <div> 
-      {cards && cards.content &&
-      <div className="row p-3">
-        {cards.content.map((c:any)=>(
-<div className="col-md-4 p-2" key={c.id}>
-    <div className="border rounded p-2 shadow">
-       <h2 className="p-2">{c.title}</h2>
+    <div className="col-md-4 p-4"> 
+      {card && card!=undefined && card.card &&
+    <div className="border rounded shadow p-2">
+       <h2 className="p-2">{card.card.title}</h2>
        <p className="fs-4">
-        {c.description}
+        {card.card.description}
        </p>
-    </div>
-</div>
-        ))}
         </div>}    
     </div>
   

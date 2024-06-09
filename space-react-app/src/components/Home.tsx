@@ -21,7 +21,6 @@ description:'asgferwgrweg2'
 }
 ]
 }
-console.log(cards)
 
 return (
     <div className="container text-center">
@@ -29,8 +28,11 @@ return (
             <div className="col-md-12 py-4">
                 <h1>My awesome title</h1>
             </div>
-<div>
-{cards!=undefined && <SingleCard cards={cards}></SingleCard>}
+<div className="row">
+{cards &&
+cards.content.map((card)=>(
+    <SingleCard key={card.id} card={card}></SingleCard>
+)) }
 </div>
         </div>
     </div>
