@@ -28,9 +28,9 @@ a{
 .top-0{
     height: 100%;
     width: 100%;
-    transform: translateY(-1000px);
+    transform: translateY(-1000px) translateX(500px);
     transition: 1s;
-    background:rgba(1,1,1, .5);
+    background:rgba(50, 240, 50, .5);
 }
 &:hover{
     .top-0{
@@ -38,7 +38,24 @@ a{
         width: 110%;
         transform: translateY(-420px) translateX(-10px);
         transition: 1s;
-        background:rgba(1,1,1, .5);
+        background:rgba(50, 240, 50, 0.5);
+    z-index: -1;
+    }
 }
 }
+.hover{
+    transition:1s;
+    &:hover{
+        scale: .8;
+        transition:1s;
+    }
+}
+
+.hover-shadow{
+    transition:1s;
+    box-shadow: 7px 7px 7px 7px rgba(1,1,1, .3);
+    &:hover{
+        transition:1s;
+        box-shadow: 7px 7px 7px 7px rgba(243, 4, 4, 0.3);
+    }
 }
