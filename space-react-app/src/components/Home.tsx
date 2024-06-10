@@ -1,8 +1,12 @@
 import SingleCard from "./SingleCard";
 import image from "../assets/react.svg"
 import fwimage from "../assets/images.jpg"
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
+    const navigate = useNavigate();
+
 
 const cards = {
     content:[
@@ -22,6 +26,10 @@ description:'asgferwgrweg2'
  description:'asgferwgrweg3'   
 }
 ]
+}
+
+const goToLogin = () =>{
+navigate('/forms')
 }
 
 return (
@@ -48,6 +56,9 @@ cards.content.map((card)=>(
 </div>
 <div className="col-md-12 py-5">
     <img src={fwimage} alt="" className="w-100 rounded hover-shadow" />
+</div>
+<div className="col-md-12 py-5">
+    <button className="btn btn-light" onClick={()=>goToLogin()}>Vai al login</button>
 </div>
 </div>
         </div>
