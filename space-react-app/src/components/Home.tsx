@@ -28,14 +28,12 @@ return (
             <div className="col-md-12 py-4">
                 <h1>My awesome title</h1>
             </div>
-<div className="row">
 {cards &&
 cards.content.map((card)=>(
     <SingleCard key={card.id} card={card}></SingleCard>
 )) }
 </div>
         </div>
-    </div>
 )
 
 };
