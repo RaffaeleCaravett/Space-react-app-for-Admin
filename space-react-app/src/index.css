@@ -59,3 +59,8 @@ a{
         box-shadow: 7px 7px 7px 7px rgba(243, 4, 4, 0.3);
     }
 }
+.form-bg{
+    background-image: url('./assets/forms-image.avif');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
