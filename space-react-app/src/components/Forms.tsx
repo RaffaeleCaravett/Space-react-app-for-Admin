@@ -1,13 +1,12 @@
+import { useState } from "react";
 
 
 const Forms = () => {
 
- const setLogin= (bool:never)=>{
-        login=bool
-    }
 
 
-    let login = [true,setLogin]
+
+    const [login,setLogin] = useState(true)
 
 
    
@@ -29,9 +28,16 @@ const Forms = () => {
 <h1>Signup</h1>
 <div className="p-2">
 {login && <form action="" className="border p-2 shadow rounded">
-
+<button className="btn btn-light">Login</button>
+<hr />
+<p>or</p>
+<button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
 </form>}
 {!login && <form action="" className="border p-2 shadow rounded">
+    <button className="btn btn-light">Signup</button>
+    <hr />
+    <p>or</p>
+    <button className="btn btn-transparent" onClick={()=>setLogin(true)}>Login</button>
     </form>}
 </div>
 </div>
