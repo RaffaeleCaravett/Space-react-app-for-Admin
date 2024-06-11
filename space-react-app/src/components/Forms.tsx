@@ -6,11 +6,8 @@ const Forms = () => {
         login=bool
     }
 
-    const setSignup= (bool:never)=>{
-        signup=bool
-    } 
+
     let login = [true,setLogin]
-    let signup = [false,setSignup]
 
 
    
@@ -34,7 +31,7 @@ const Forms = () => {
 {login && <form action="" className="border p-2 shadow rounded">
 
 </form>}
-{signup && <form action="" className="border p-2 shadow rounded">
+{!login && <form action="" className="border p-2 shadow rounded">
     </form>}
 </div>
 </div>
