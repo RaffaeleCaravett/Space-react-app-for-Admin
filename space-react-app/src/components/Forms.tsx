@@ -24,8 +24,8 @@ const Forms = () => {
     </p>
 </div>
 <div className="col-md-6 py-5">
-<h1>Login</h1>
-<h1>Signup</h1>
+{login&&<h1>Login</h1>}
+{!login&&<h1>Signup</h1>}
 <div className="p-2">
 {login && <form action="" className="border p-2 shadow rounded">
 <button className="btn btn-light">Login</button>
