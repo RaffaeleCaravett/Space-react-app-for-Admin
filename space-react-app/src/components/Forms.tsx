@@ -8,7 +8,8 @@ const Forms = () => {
 
     const [login,setLogin] = useState(true)
 
-
+  const emailError:string=""
+  const passwordError:string=""
    
 
     return(
@@ -28,6 +29,12 @@ const Forms = () => {
 {!login&&<h1>Signup</h1>}
 <div className="p-2">
 {login && <form action="" className="border p-2 shadow rounded">
+    <label className="fw-bold">Email</label><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" /><br />
+    {emailError!=""&&<p>{emailError}</p>}
+    <label className="fw-bold">Password</label><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" /><br />
+    {passwordError!=""&&<p>{passwordError}</p>}
 <button className="btn btn-light">Login</button>
 <hr />
 <p>or</p>
