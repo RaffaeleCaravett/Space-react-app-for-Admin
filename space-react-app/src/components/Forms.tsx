@@ -8,9 +8,13 @@ const Forms = () => {
 
     const [login,setLogin] = useState(true)
 
-  const emailError:string=""
+  const [emailError,setEmailError]= useState('')
   const passwordError:string=""
    
+
+const logIn = ()=>{
+  
+}
 
     return(
 <div className="container text-center form-bg">
@@ -30,12 +34,12 @@ const Forms = () => {
 <div className="p-2">
 {login && <form action="" className="border p-2 shadow rounded">
     <label className="fw-bold">Email</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" /><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="emailLogin" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'")} /><br />
     {emailError!=""&&<p>{emailError}</p>}
     <label className="fw-bold">Password</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" /><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'")}/><br />
     {passwordError!=""&&<p>{passwordError}</p>}
-<button className="btn btn-light">Login</button>
+<button className="btn btn-light" onClick={()=>logIn()}>Login</button>
 <hr />
 <p>or</p>
 <button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
