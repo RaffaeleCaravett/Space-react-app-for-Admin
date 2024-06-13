@@ -9,7 +9,7 @@ const Forms = () => {
     const [login,setLogin] = useState(true)
 
   const [emailError,setEmailError]= useState('')
-  const passwordError:string=""
+  const  [passwordError,setPasswordError] = useState('')
    
 
 const logIn = ()=>{
@@ -32,14 +32,14 @@ const logIn = ()=>{
 {login&&<h1>Login</h1>}
 {!login&&<h1>Signup</h1>}
 <div className="p-2">
-{login && <form action="" className="border p-2 shadow rounded">
+{login && <form action="" className="border p-2 shadow rounded" onSubmit={()=>logIn()}>
     <label className="fw-bold">Email</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="emailLogin" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'")} /><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="emailLogin" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'.")} /><br />
     {emailError!=""&&<p>{emailError}</p>}
     <label className="fw-bold">Password</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'")}/><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
     {passwordError!=""&&<p>{passwordError}</p>}
-<button className="btn btn-light" onClick={()=>logIn()}>Login</button>
+<button className="btn btn-light" type="submit">Login</button>
 <hr />
 <p>or</p>
 <button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
