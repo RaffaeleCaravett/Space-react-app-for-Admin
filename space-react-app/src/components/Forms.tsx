@@ -14,8 +14,9 @@ const Forms = () => {
 
 const logIn = (e: Event)=>{
     e.preventDefault()
+    const form = e.target
     console.log(e)
- 
+ console.log(form)
 }
 
     return(
