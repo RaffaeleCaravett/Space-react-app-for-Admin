@@ -13,7 +13,34 @@ const api_url = useSelector((state:any) => state.api.url)
 
   const [emailError,setEmailError]= useState('')
   const  [passwordError,setPasswordError] = useState('')
+  const  [loginError,setLoginError] = useState('')
    
+
+const fetchLogin = (email:string,password:string) =>{
+        fetch(`${api_url}auth/login`,{
+            method: "POST", 
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                {email:email,password:password}
+            ) 
+          
+        })
+        .then((res)=>{
+            return res.json();
+        }).then((res)=>{
+            if(res&&!res.message){
+                console.log(res)
+                setLoginError("")
+            }else{
+                setLoginError(res.message)
+            }
+        }
+        ).catch((error)=>{
+            console.log("error : " + error)
+        })
+}
 
 const logIn = (e: Event)=>{
     e.preventDefault()
@@ -21,45 +48,33 @@ const logIn = (e: Event)=>{
     const email = document.getElementById('emailLogin') as HTMLInputElement
     const password = document.getElementById('passwordLogin') as HTMLInputElement
     const emailRegex = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
+    let counter = 0;
 if(email.value.length==0||email.value==undefined||email.value==null){
     setEmailError("Inserisci un valore.")
 }else{
     setEmailError("")
     if(!emailRegex.test(email.value)){
         setEmailError("Inserisci un valore di tipo 'email@value.aa'.")
+    }else{
+        counter=counter+1
     }
 }
 if(password.value.length<6||password.value==undefined||password.value==null){
     setPasswordError("Inserisci un valore con almeno 6 caratteri.")
 }else{
     setPasswordError("")
+    counter=counter+1
 }
-
-if(emailError===""&&passwordError===""){
-    console.log(api_url)
-fetch(`${api_url}auth/login`,{
-    method: "POST", 
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(
-        {email:email.value,password:password.value}
-    ) 
-  
-})
-.then((res)=>{
-    return res;
-}).then((res)=>{
-    if(res){
-        console.log(res)
-    }
-}
-).catch((error)=>{
-    console.log(error)
-})
+console.log(counter)
+if(counter==2){
+    console.log(counter)
+    fetchLogin(email.value,password.value)
+}else{
+    console.log(counter)
 }
 
 }
+
 
     return(
 <div className="container text-center form-bg">
@@ -84,6 +99,7 @@ fetch(`${api_url}auth/login`,{
     <label className="fw-bold">Password</label><br />
     <input type="password" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
     {passwordError!=""&&<p className="text-danger">{passwordError}</p>}
+    {loginError !=""&& <p className="text-danger">{loginError}</p> }
 <button className="btn btn-light" type="submit">Login</button>
 <hr />
 <p>or</p>
