@@ -17,15 +17,23 @@ const logIn = (e: Event)=>{
    
     const email = document.getElementById('emailLogin') as HTMLInputElement
     const password = document.getElementById('passwordLogin') as HTMLInputElement
+    const emailRegex = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
 if(email.value.length==0||email.value==undefined||email.value==null){
-    setEmailError("Inserisci un valore di tipo 'email@value.com'")
+    setEmailError("Inserisci un valore.")
 }else{
     setEmailError("")
+    if(!emailRegex.test(email.value)){
+        setEmailError("Inserisci un valore di tipo 'email@value.aa'.")
+    }
 }
 if(password.value.length<6||password.value==undefined||password.value==null){
-    setPasswordError("Inserisci un valore con almeno 6 caratteri")
+    setPasswordError("Inserisci un valore con almeno 6 caratteri.")
 }else{
     setPasswordError("")
+}
+
+if(emailError===""&&passwordError===""){
+    console.log('ihih')
 }
 
 }
