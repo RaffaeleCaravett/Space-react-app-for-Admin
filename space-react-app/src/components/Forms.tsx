@@ -59,7 +59,7 @@ if(emailError===""&&passwordError===""){
     <input type="text" className="form-control shadow-lg bg-transparent" id="emailLogin" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'.")} /><br />
     {emailError!=""&&<p className="text-danger">{emailError}</p>}
     <label className="fw-bold">Password</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
+    <input type="password" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
     {passwordError!=""&&<p className="text-danger">{passwordError}</p>}
 <button className="btn btn-light" type="submit">Login</button>
 <hr />
