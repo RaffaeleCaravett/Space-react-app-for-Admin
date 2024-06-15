@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 
 const Forms = () => {
 
+const api_url = useSelector((state:any) => state.api.url)
 
 
 
@@ -33,7 +36,18 @@ if(password.value.length<6||password.value==undefined||password.value==null){
 }
 
 if(emailError===""&&passwordError===""){
-    console.log('ihih')
+    console.log(api_url)
+fetch('http://localhost/auth/login')
+.then((res)=>{
+    return res;
+}).then((res)=>{
+    if(res){
+        console.log(res)
+    }
+}
+).catch((error)=>{
+    console.log(error)
+})
 }
 
 }
