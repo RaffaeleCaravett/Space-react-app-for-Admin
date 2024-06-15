@@ -14,9 +14,20 @@ const Forms = () => {
 
 const logIn = (e: Event)=>{
     e.preventDefault()
-    const form = e.target
-    console.log(e)
- console.log(form)
+   
+    const email = document.getElementById('emailLogin') as HTMLInputElement
+    const password = document.getElementById('passwordLogin') as HTMLInputElement
+if(email.value.length==0||email.value==undefined||email.value==null){
+    setEmailError("Inserisci un valore di tipo 'email@value.com'")
+}else{
+    setEmailError("")
+}
+if(password.value.length<6||password.value==undefined||password.value==null){
+    setPasswordError("Inserisci un valore con almeno 6 caratteri")
+}else{
+    setPasswordError("")
+}
+
 }
 
     return(
@@ -37,11 +48,11 @@ const logIn = (e: Event)=>{
 <div className="p-2">
 {login && <form action="" className="border p-2 shadow rounded" name="" onSubmit={()=>logIn(event!)}>
     <label className="fw-bold">Email</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" name="email" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'.")} /><br />
-    {emailError!=""&&<p>{emailError}</p>}
+    <input type="text" className="form-control shadow-lg bg-transparent" id="emailLogin" onInvalid={()=>setEmailError("Inserisci un valore tipo 'a@a.com'.")} /><br />
+    {emailError!=""&&<p className="text-danger">{emailError}</p>}
     <label className="fw-bold">Password</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" name="password" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
-    {passwordError!=""&&<p>{passwordError}</p>}
+    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordLogin" minLength={6} onInvalid={()=>setPasswordError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
+    {passwordError!=""&&<p className="text-danger">{passwordError}</p>}
 <button className="btn btn-light" type="submit">Login</button>
 <hr />
 <p>or</p>
