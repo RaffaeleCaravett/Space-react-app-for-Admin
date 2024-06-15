@@ -106,6 +106,22 @@ if(counter==2){
 <button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
 </form>}
 {!login && <form action="" className="border p-2 shadow rounded">
+<label className="fw-bold">Email</label><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="emailSignup" onInvalid={()=>setEmailSignupError("Inserisci un valore tipo 'a@a.com'.")} /><br />
+    {emailSignupError!=""&&<p className="text-danger">{emailSignupError}</p>}
+    <label className="fw-bold">Password</label><br />
+    <input type="password" className="form-control shadow-lg bg-transparent" id="passwordSignup" minLength={6} onInvalid={()=>setPasswordSignupError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
+    {passwordSignupError!=""&&<p className="text-danger">{passwordSignupError}</p>}
+    <label className="fw-bold">Nome</label><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="emailSignup" onInvalid={()=>setNomeSignupError("Inserisci un valore.")} /><br />
+    {nomeSignupError!=""&&<p className="text-danger">{nomeSignupError}</p>}
+    <label className="fw-bold">Cognome</label><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordSignup" minLength={6} onInvalid={()=>setCognomeSignupError("Inserisci un valore.")}/><br />
+    {cognomeSignupError!=""&&<p className="text-danger">{cognomeSignupError}</p>}
+    <label className="fw-bold">Età</label><br />
+    <input type="number" className="form-control shadow-lg bg-transparent" id="etaSignup" minLength={6} onInvalid={()=>setEtaSignupError("Inserisci un valore maggiore di 18.")}/><br />
+    {passwordError!=""&&<p className="text-danger">{etaSignupError}</p>}
+    {etaSignupError !=""&& <p className="text-danger">{etaSignupError}</p> }
     <button className="btn btn-light">Signup</button>
     <hr />
     <p>or</p>
