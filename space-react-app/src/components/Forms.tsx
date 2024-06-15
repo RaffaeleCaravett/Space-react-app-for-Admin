@@ -15,6 +15,12 @@ const api_url = useSelector((state:any) => state.api.url)
   const  [passwordError,setPasswordError] = useState('')
   const  [loginError,setLoginError] = useState('')
    
+  const [emailSignupError,setEmailSignupError]= useState('')
+  const  [passwordSignupError,setPasswordSignupError] = useState('')
+   const [nomeSignupError,setNomeSignupError]= useState('')
+  const  [cognomeSignupError,setCognomeSignupError] = useState('')
+  const [etaSignupError,setEtaSignupError]= useState('')
+  const  [signupError,setSignupError] = useState('')
 
 const fetchLogin = (email:string,password:string) =>{
         fetch(`${api_url}auth/login`,{
@@ -75,6 +81,10 @@ if(counter==2){
 
 }
 
+const signup = (e:Event) =>{
+    e.preventDefault()
+    setSignupError("Submitted")
+}
 
     return(
 <div className="container text-center form-bg">
@@ -105,7 +115,7 @@ if(counter==2){
 <p>or</p>
 <button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
 </form>}
-{!login && <form action="" className="border p-2 shadow rounded">
+{!login && <form action="" onSubmit={()=>signup(event!)} className="border p-2 shadow rounded">
 <label className="fw-bold">Email</label><br />
     <input type="text" className="form-control shadow-lg bg-transparent" id="emailSignup" onInvalid={()=>setEmailSignupError("Inserisci un valore tipo 'a@a.com'.")} /><br />
     {emailSignupError!=""&&<p className="text-danger">{emailSignupError}</p>}
@@ -120,12 +130,12 @@ if(counter==2){
     {cognomeSignupError!=""&&<p className="text-danger">{cognomeSignupError}</p>}
     <label className="fw-bold">Età</label><br />
     <input type="number" className="form-control shadow-lg bg-transparent" id="etaSignup" minLength={6} onInvalid={()=>setEtaSignupError("Inserisci un valore maggiore di 18.")}/><br />
-    {passwordError!=""&&<p className="text-danger">{etaSignupError}</p>}
-    {etaSignupError !=""&& <p className="text-danger">{etaSignupError}</p> }
-    <button className="btn btn-light">Signup</button>
+    {etaSignupError!=""&&<p className="text-danger">{etaSignupError}</p>}
+    {signupError !=""&& <p className="text-danger">{signupError}</p> }
+    <button className="btn btn-light" type="submit" >Signup</button>
     <hr />
     <p>or</p>
-    <button className="btn btn-transparent" onClick={()=>setLogin(true)}>Login</button>
+    <button className="btn btn-transparent"onClick={()=>setLogin(true)}>Login</button>
     </form>}
 </div>
 </div>
