@@ -37,7 +37,16 @@ if(password.value.length<6||password.value==undefined||password.value==null){
 
 if(emailError===""&&passwordError===""){
     console.log(api_url)
-fetch('http://localhost/auth/login')
+fetch(`${api_url}auth/login`,{
+    method: "POST", 
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(
+        {email:email.value,password:password.value}
+    ) 
+  
+})
 .then((res)=>{
     return res;
 }).then((res)=>{
