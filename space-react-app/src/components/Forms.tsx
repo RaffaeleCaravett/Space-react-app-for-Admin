@@ -21,6 +21,9 @@ const api_url = useSelector((state:any) => state.api.url)
   const  [cognomeSignupError,setCognomeSignupError] = useState('')
   const [etaSignupError,setEtaSignupError]= useState('')
   const  [signupError,setSignupError] = useState('')
+  const  [signupSuccess,setSignupSuccess] = useState('')
+
+
 
 const fetchLogin = (email:string,password:string) =>{
         fetch(`${api_url}auth/login`,{
@@ -36,11 +39,11 @@ const fetchLogin = (email:string,password:string) =>{
         .then((res)=>{
             return res.json();
         }).then((res)=>{
-            if(res&&!res.message){
+            if(res&&res.message){
+                setLoginError(res.message)
+            }else if(res&&!res.message){
                 console.log(res)
                 setLoginError("")
-            }else{
-                setLoginError(res.message)
             }
         }
         ).catch((error)=>{
@@ -81,43 +84,101 @@ if(counter==2){
 
 }
 
+
+
+const fetchSignup = (body:any)=>{
+
+  fetch(`${api_url}auth/register`,{
+    method: "POST", 
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(
+        body
+    ) 
+  }).then((res)=>{
+    return res.json()
+  }).then((res)=>{
+    console.log(res)
+     if(res&&res.message){
+        setSignupSuccess("")
+        setSignupError(res.message)
+    }else if(res&&res.messageList){
+        console.log('ihih')
+        setSignupSuccess("")
+        setSignupError(res.messageList[0])
+    }else if(res&&!res.message){
+        setSignupSuccess("Utente registrato con successo.")
+setSignupError("")
+    }
+  })
+  .catch((error)=>{
+    console.log(error)
+    setSignupError(error.error.message)
+  })
+}
+
 const signup = (e:Event) =>{
     e.preventDefault()
+    let counter:number=0
    const email = document.getElementById('emailSignup') as HTMLInputElement
-const emailPattern = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
+const emailPattern =  new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
+
    if(email.value==undefined||email.value==null||email.value==''||email.value.length==0){
     setEmailSignupError("Inserisci un valore.")
+    setSignupSuccess("")
 }else{
     setEmailSignupError("")
+    counter=counter+1
     if(!emailPattern.test(email.value)){
         setEmailSignupError("Inserisci un valore tipo 'a@a.com'")
+        setSignupSuccess("")
+        counter=counter-1
     }
 }
 const password = document.getElementById('passwordSignup') as HTMLInputElement
 if(password.value==undefined||password.value==null||password.value.length<6){
     setPasswordSignupError("Inserisci un valore con almeno 6 caratteri")
+    setSignupSuccess("")
 }else{
     setPasswordSignupError("")
+    counter=counter+1
 }
 const nome = document.getElementById('nomeSignup') as HTMLInputElement
 if(nome.value==undefined||nome.value==null||nome.value.length==0){
     setNomeSignupError("Inserisci un valore.")
+    setSignupSuccess("")
 }else{
     setNomeSignupError("")
+    counter=counter+1
 }
 const cognome = document.getElementById("cognomeSignup") as HTMLInputElement
 if(cognome.value==undefined||cognome.value==null||cognome.value.length==0){
     setCognomeSignupError("Inserisci un valore.")
+    setSignupSuccess("")
 }else{
     setCognomeSignupError("")
+    counter=counter+1
 }
 const eta = document.getElementById("etaSignup") as HTMLInputElement
 if(eta.value==undefined||eta.value==null||eta.value < '18'){
     setEtaSignupError("Devi avere almeno 18 anni.")
+    setSignupSuccess("")
 }else{
     setEtaSignupError("")
+    counter=counter+1
 }
-setSignupError("")
+if(counter===5){
+    const body = {
+        email:email.value,
+        password:password.value,
+        nome:nome.value,
+        cognome:cognome.value,
+        eta:eta.value
+            }
+
+fetchSignup(body)
+}
 }
 
     return(
@@ -147,7 +208,7 @@ setSignupError("")
 <button className="btn btn-light" type="submit">Login</button>
 <hr />
 <p>or</p>
-<button className="btn btn-transparent" onClick={()=>setLogin(false)}>Signup</button>
+<button className="btn btn-transparent" onClick={()=>[setLogin(false),setSignupError(""),setEmailSignupError(""),setPasswordSignupError(""),setNomeSignupError(""),setCognomeSignupError(""),setEtaSignupError("")]}>Signup</button>
 </form>}
 {!login && <form action="" onSubmit={()=>signup(event!)} className="border p-2 shadow rounded">
 <label className="fw-bold">Email</label><br />
@@ -160,16 +221,17 @@ setSignupError("")
     <input type="text" className="form-control shadow-lg bg-transparent" id="nomeSignup" onInvalid={()=>setNomeSignupError("Inserisci un valore.")} /><br />
     {nomeSignupError!=""&&<p className="text-danger">{nomeSignupError}</p>}
     <label className="fw-bold">Cognome</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="cognomeSignup" minLength={6} onInvalid={()=>setCognomeSignupError("Inserisci un valore.")}/><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="cognomeSignup" onInvalid={()=>setCognomeSignupError("Inserisci un valore.")}/><br />
     {cognomeSignupError!=""&&<p className="text-danger">{cognomeSignupError}</p>}
     <label className="fw-bold">Età</label><br />
-    <input type="number" className="form-control shadow-lg bg-transparent" id="etaSignup" minLength={6} onInvalid={()=>setEtaSignupError("Inserisci un valore maggiore di 18.")}/><br />
+    <input type="number" className="form-control shadow-lg bg-transparent" id="etaSignup"  onInvalid={()=>setEtaSignupError("Inserisci un valore maggiore di 18.")}/><br />
     {etaSignupError!=""&&<p className="text-danger">{etaSignupError}</p>}
     {signupError !=""&& <p className="text-danger">{signupError}</p> }
+    {signupSuccess !=""&& <p className="text-success">{signupSuccess}</p> }
     <button className="btn btn-light" type="submit" >Signup</button>
     <hr />
     <p>or</p>
-    <button className="btn btn-transparent"onClick={()=>setLogin(true)}>Login</button>
+    <button className="btn btn-transparent"onClick={()=>[setLogin(true),setLoginError(""),setEmailError(""),setPasswordError("")]}>Login</button>
     </form>}
 </div>
 </div>
