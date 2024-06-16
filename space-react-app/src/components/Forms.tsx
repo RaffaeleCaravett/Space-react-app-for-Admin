@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setUser } from "../redux/userSlice";
+import { setAccessToken, setIsLoggedIn } from "../redux/accessTokenSlice";
 
 
 const Forms = () => {
@@ -22,6 +25,8 @@ const api_url = useSelector((state:any) => state.api.url)
   const [etaSignupError,setEtaSignupError]= useState('')
   const  [signupError,setSignupError] = useState('')
   const  [signupSuccess,setSignupSuccess] = useState('')
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
 
@@ -42,8 +47,30 @@ const fetchLogin = (email:string,password:string) =>{
             if(res&&res.message){
                 setLoginError(res.message)
             }else if(res&&!res.message){
-                console.log(res)
-                setLoginError("")
+                dispatch(setAccessToken(res))
+                dispatch(setIsLoggedIn(true))
+                localStorage.setItem('refreshToken',res.tokens.refreshToken)
+                
+fetch(`${api_url}/${res.tokens.accessToken}`,{
+    method: "GET",
+    headers: {
+      "Content-Length": "0"
+    }
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    if(res){
+        dispatch(setUser(res))
+        navigate('/office')
+    }
+}).catch((error)=>{
+    dispatch(setAccessToken(""))
+    dispatch(setIsLoggedIn(false))
+    dispatch(setUser({}))
+    navigate("/home")
+    console.log(error)
+
+})
             }
         }
         ).catch((error)=>{
@@ -182,7 +209,8 @@ fetchSignup(body)
 }
 
     return(
-<div className="container text-center form-bg">
+        <div className="row p-0 py-5 m-0 form-bg">
+<div className="container text-center py-5">
     <div className="row">
 <div className="col-md-12 py-5">
     <h1>Forms</h1>
@@ -237,6 +265,7 @@ fetchSignup(body)
 </div>
     </div>
     </div>
+        </div>
     )
 }
 export default Forms;
