@@ -83,7 +83,41 @@ if(counter==2){
 
 const signup = (e:Event) =>{
     e.preventDefault()
-    setSignupError("Submitted")
+   const email = document.getElementById('emailSignup') as HTMLInputElement
+const emailPattern = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$')
+   if(email.value==undefined||email.value==null||email.value==''||email.value.length==0){
+    setEmailSignupError("Inserisci un valore.")
+}else{
+    setEmailSignupError("")
+    if(!emailPattern.test(email.value)){
+        setEmailSignupError("Inserisci un valore tipo 'a@a.com'")
+    }
+}
+const password = document.getElementById('passwordSignup') as HTMLInputElement
+if(password.value==undefined||password.value==null||password.value.length<6){
+    setPasswordSignupError("Inserisci un valore con almeno 6 caratteri")
+}else{
+    setPasswordSignupError("")
+}
+const nome = document.getElementById('nomeSignup') as HTMLInputElement
+if(nome.value==undefined||nome.value==null||nome.value.length==0){
+    setNomeSignupError("Inserisci un valore.")
+}else{
+    setNomeSignupError("")
+}
+const cognome = document.getElementById("cognomeSignup") as HTMLInputElement
+if(cognome.value==undefined||cognome.value==null||cognome.value.length==0){
+    setCognomeSignupError("Inserisci un valore.")
+}else{
+    setCognomeSignupError("")
+}
+const eta = document.getElementById("etaSignup") as HTMLInputElement
+if(eta.value==undefined||eta.value==null||eta.value < '18'){
+    setEtaSignupError("Devi avere almeno 18 anni.")
+}else{
+    setEtaSignupError("")
+}
+setSignupError("")
 }
 
     return(
@@ -123,10 +157,10 @@ const signup = (e:Event) =>{
     <input type="password" className="form-control shadow-lg bg-transparent" id="passwordSignup" minLength={6} onInvalid={()=>setPasswordSignupError("Inserisci un valore con lunghezza minima : 6 caratteri.")}/><br />
     {passwordSignupError!=""&&<p className="text-danger">{passwordSignupError}</p>}
     <label className="fw-bold">Nome</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="emailSignup" onInvalid={()=>setNomeSignupError("Inserisci un valore.")} /><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="nomeSignup" onInvalid={()=>setNomeSignupError("Inserisci un valore.")} /><br />
     {nomeSignupError!=""&&<p className="text-danger">{nomeSignupError}</p>}
     <label className="fw-bold">Cognome</label><br />
-    <input type="text" className="form-control shadow-lg bg-transparent" id="passwordSignup" minLength={6} onInvalid={()=>setCognomeSignupError("Inserisci un valore.")}/><br />
+    <input type="text" className="form-control shadow-lg bg-transparent" id="cognomeSignup" minLength={6} onInvalid={()=>setCognomeSignupError("Inserisci un valore.")}/><br />
     {cognomeSignupError!=""&&<p className="text-danger">{cognomeSignupError}</p>}
     <label className="fw-bold">Età</label><br />
     <input type="number" className="form-control shadow-lg bg-transparent" id="etaSignup" minLength={6} onInvalid={()=>setEtaSignupError("Inserisci un valore maggiore di 18.")}/><br />
