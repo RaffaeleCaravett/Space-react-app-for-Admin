@@ -25,7 +25,7 @@ navigate('/home')
           <Link to={'/home'}> Home</Link> 
         </div>
          <div className="col-md-4 p-2">
-         <Link to={'/office'}>Office</Link> 
+         {isLoggedIn&&<Link to={'/office'}>Office</Link>} 
         </div>
         <div className="col-md-4 p-2">
         {!isLoggedIn &&< Link to={'/forms'}>Login</Link>}  
