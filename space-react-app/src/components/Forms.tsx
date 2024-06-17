@@ -13,8 +13,20 @@ const api_url = useSelector((state:any) => state.api.url)
 const handleWindowRefresh = () => {
     if(window.performance.navigation.type == 1){
      if(localStorage.getItem('accessToken')){
-        console.log('there is token')
-     }else{
+fetch(`${api_url}${localStorage.getItem('accessToken')}`,{
+    method: "GET",
+    headers: {
+      "Content-Length": "0"
+    }
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    console.log(res)
+}).catch((error)=>{
+    console.log(error)
+})
+
+    }else{
         if(localStorage.getItem('refreshToken')){
 console.log('refreshToken')
         }
@@ -65,7 +77,7 @@ const fetchLogin = (email:string,password:string) =>{
                 dispatch(setIsLoggedIn(true))
                 localStorage.setItem('refreshToken',res.tokens.refreshToken)
                 
-fetch(`${api_url}/${res.tokens.accessToken}`,{
+fetch(`${api_url}auth/${res.tokens.accessToken}`,{
     method: "GET",
     headers: {
       "Content-Length": "0"
