@@ -19,7 +19,9 @@ const handleWindowRefresh = () => {
 console.log('refreshToken')
         }
      }
-    
+    if(!localStorage.getItem('accessToken')&&!localStorage.getItem('refreshToken')){
+        console.log('no tokens')
+    }
     }
 }
 window.addEventListener('load', handleWindowRefresh);
