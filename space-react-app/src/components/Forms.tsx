@@ -10,7 +10,19 @@ const Forms = () => {
 
 const api_url = useSelector((state:any) => state.api.url)
 
-
+const handleWindowRefresh = () => {
+    if(window.performance.navigation.type == 1){
+     if(localStorage.getItem('accessToken')){
+        console.log('there is token')
+     }else{
+        if(localStorage.getItem('refreshToken')){
+console.log('refreshToken')
+        }
+     }
+    
+    }
+}
+window.addEventListener('load', handleWindowRefresh);
 
     const [login,setLogin] = useState(true)
 

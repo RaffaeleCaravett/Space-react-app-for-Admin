@@ -13,7 +13,14 @@ const Office = () => {
  })
 const handleWindowRefresh = () => {
     if(window.performance.navigation.type == 1){
-        console.log('ihih')
+     if(localStorage.getItem('accessToken')){
+        console.log('there is token')
+     }else{
+        if(localStorage.getItem('refreshToken')){
+console.log('refreshToken')
+        }
+     }
+    
     }
 }
 window.addEventListener('load', handleWindowRefresh);
