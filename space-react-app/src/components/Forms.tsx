@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
@@ -13,19 +13,30 @@ const api_url = useSelector((state:any) => state.api.url)
 const handleWindowRefresh = () => {
     if(window.performance.navigation.type == 1){
      if(localStorage.getItem('accessToken')){
-fetch(`${api_url}${localStorage.getItem('accessToken')}`,{
-    method: "GET",
-    headers: {
-      "Content-Length": "0"
-    }
-}).then((res)=>{
-    return res.json()
-}).then((res)=>{
-    console.log(res)
-}).catch((error)=>{
-    console.log(error)
-})
+        const token = localStorage.getItem('accessToken')
 
+        fetch(`${api_url+'auth/'+token}`,{
+          method: "GET",
+          headers: {
+            "Content-Length": "0"
+          }
+      }).then((res)=>{
+          return res.json()
+      }).then((res)=>{
+          if(res){
+              dispatch(setUser(res))
+              if(localStorage.getItem('route')){  
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                useEffect(()=>{   
+navigate(`/${localStorage.getItem('route')}`)
+              })              
+}else{
+              navigate('/office')
+          }
+        }
+      }).catch((error)=>{
+          console.log(error)
+        })      
     }else{
         if(localStorage.getItem('refreshToken')){
 console.log('refreshToken')
@@ -75,6 +86,7 @@ const fetchLogin = (email:string,password:string) =>{
             }else if(res&&!res.message){
                 dispatch(setAccessToken(res))
                 dispatch(setIsLoggedIn(true))
+                localStorage.setItem('accessToken',res.tokens.accessToken)
                 localStorage.setItem('refreshToken',res.tokens.refreshToken)
                 
 fetch(`${api_url}auth/${res.tokens.accessToken}`,{

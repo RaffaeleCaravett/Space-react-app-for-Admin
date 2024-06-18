@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
 
     const navigate = useNavigate();
+    localStorage.setItem('route','home')
 
 
 const cards = {

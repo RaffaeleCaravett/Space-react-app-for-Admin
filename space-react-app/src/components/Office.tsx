@@ -8,7 +8,7 @@ import { setUser } from "../redux/userSlice";
 const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
  const navigate = useNavigate()
-
+localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
  const dispatch = useDispatch()
 useEffect(() => {
