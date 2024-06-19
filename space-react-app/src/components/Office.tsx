@@ -57,8 +57,23 @@ CheckLoggedIn()
 // window.addEventListener('load', handleWindowRefresh);
 
  return(
-     <div>
-                Office
+     <div className="container text-center">
+             <div className="row py-5">
+                <div className="col-md-12 py-5">
+                <h1>Your call is to do great things</h1>
+                <p className="fs-5">So, let's keept your head up and work on the things you do!</p>
+                </div>
+                    <div className="col-md-4 p-2">
+<div className="border rounded shadow p-2">
+<h2>Cosa vuoi fare?</h2>
+</div>
+                    </div>
+                    <div className="col-md-8 p-2">
+<div className="border rounded shadow p-2">
+<h2>Come on</h2>
+</div>
+                </div>
+             </div>
             </div>
             )
         }
