@@ -9,6 +9,7 @@ import { useEffect } from "react";
 const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
  const navigate = useNavigate()
+ let toDo = 'addPlanet'
 localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
 // const dispatch = useDispatch()
@@ -68,16 +69,20 @@ CheckLoggedIn()
 <h2>Cosa vuoi fare?</h2>
 
 <ol className="py-4">
-    <li>Aggiungere un pianeta</li>
-    <li>Modificare un pianeta</li>
-    <li>Aggiungere un pacchetto</li>
-    <li>Modificare un pacchetto</li>
+    <li onClick={()=>{toDo='addPlanet'}}>Aggiungere un pianeta</li>
+    <li onClick={()=>{toDo='modifyPlanet'}}>Modificare un pianeta</li>
+    <li onClick={()=>{toDo='addPackage'}}>Aggiungere un pacchetto</li>
+    <li onClick={()=>{toDo='modifyPackage'}}>Modificare un pacchetto</li>
 </ol>
 </div>
                     </div>
                     <div className="col-md-8 p-2">
 <div className="border rounded shadow p-2">
 <h2>Come on</h2>
+{toDo=='addPlanet'&&<h3>Aggiungi un pianeta</h3>}
+{toDo=='modifyPlanet'&&<h3>Modifica un pianeta</h3>}
+{toDo=='addPackage'&&<h3>Aggiungi un pacchetto</h3>}
+{toDo=='modifyPackage'&&<h3>Modifica un pacchetto</h3>}
 </div>
                 </div>
              </div>
