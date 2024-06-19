@@ -2,14 +2,14 @@
 import {  useSelector } from "react-redux";
 import { tokenInterface } from "../interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { setUser } from "../redux/userSlice";
 // import { api } from "../redux/apiUrl";
 
 const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
  const navigate = useNavigate()
- let toDo = 'addPlanet'
+ const [toDo,setToDo]= useState('addPlanet')
 localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
 // const dispatch = useDispatch()
@@ -69,10 +69,10 @@ CheckLoggedIn()
 <h2>Cosa vuoi fare?</h2>
 
 <ol className="py-4">
-    <li onClick={()=>{toDo='addPlanet'}}>Aggiungere un pianeta</li>
-    <li onClick={()=>{toDo='modifyPlanet'}}>Modificare un pianeta</li>
-    <li onClick={()=>{toDo='addPackage'}}>Aggiungere un pacchetto</li>
-    <li onClick={()=>{toDo='modifyPackage'}}>Modificare un pacchetto</li>
+    <li onClick={()=>{setToDo('addPlanet')}}>Aggiungere un pianeta</li>
+    <li onClick={()=>{setToDo('modifyPlanet')}}>Modificare un pianeta</li>
+    <li onClick={()=>{setToDo('addPackage')}}>Aggiungere un pacchetto</li>
+    <li onClick={()=>{setToDo('modifyPackage')}}>Modificare un pacchetto</li>
 </ol>
 </div>
                     </div>
