@@ -2,6 +2,9 @@ import SingleCard from "./SingleCard";
 import image from "../assets/react.svg"
 import fwimage from "../assets/images.jpg"
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setAccessToken, setIsLoggedIn } from "../redux/accessTokenSlice";
+import { setUser } from "../redux/userSlice";
 
 const Home = () => {
 
@@ -32,6 +35,91 @@ description:'asgferwgrweg2'
 const goToLogin = () =>{
 navigate('/forms')
 }
+
+const dispatch = useDispatch()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const api_url = useSelector((state:any) => state.api.url)
+
+const handleWindowRefresh = () => {
+    if(window.performance.navigation.type == 1){
+     if(localStorage.getItem('accessToken')){
+        const token = localStorage.getItem('accessToken')
+
+        fetch(`${api_url+'auth/'+token}`,{
+          method: "GET",
+          headers: {
+            "Content-Length": "0"
+          }
+      }).then((res)=>{
+          return res.json()
+      }).then((res)=>{
+          if(res&&!res.message){
+            dispatch(setAccessToken(localStorage.getItem('accessToken')))
+            dispatch(setIsLoggedIn(true))
+              dispatch(setUser(res))
+              if(localStorage.getItem('route')){  
+navigate(`/${localStorage.getItem('route')}`)
+}else{
+              navigate('/office')
+          }
+        }else{
+            throw Error(`${res.message}`)
+        }
+      }).catch((error)=>{
+        console.log(error)
+ if(localStorage.getItem('refreshToken')){
+        fetch(`${api_url+'auth/refreshToken/'+localStorage.getItem('refreshToken')}`,{
+            method: "GET",
+            headers: {
+              "Content-Length": "0"
+            }
+        })
+        .then((res)=>{
+            return res.json()
+        })
+        .then((res)=>{
+            if(res&&!res.message){
+           localStorage.setItem('accessToken',res.accessToken)
+           dispatch(setAccessToken(localStorage.getItem('accessToken')))
+           localStorage.setItem('refreshToken',res.refreshToken)
+
+           fetch(`${api_url+'auth/'+res.accessToken}`,{
+            method: "GET",
+            headers: {
+              "Content-Length": "0"
+            }
+        }).then((res)=>{
+            return res.json()
+        }).then((res)=>{
+            if(res&&!res.message){
+                dispatch(setIsLoggedIn(true))
+                dispatch(setUser(res))
+                if(localStorage.getItem('route')){  
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+  navigate(`/${localStorage.getItem('route')}`)
+  }else{
+                navigate('/office')
+            }
+          }else{
+              throw Error(`${res.message}`)
+          }
+        })
+        }else{
+                throw Error (res.message)
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+       }
+    })      
+    }
+    if(!localStorage.getItem('accessToken')&&!localStorage.getItem('refreshToken')){
+        console.log('no tokens')
+    }
+    }
+}
+window.addEventListener('load', handleWindowRefresh);
 
 return (
     <div className="container text-center">

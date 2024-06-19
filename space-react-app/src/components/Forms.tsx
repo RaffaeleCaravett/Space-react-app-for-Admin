@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/userSlice";
@@ -28,10 +28,7 @@ const handleWindowRefresh = () => {
             dispatch(setIsLoggedIn(true))
               dispatch(setUser(res))
               if(localStorage.getItem('route')){  
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                useEffect(()=>{   
 navigate(`/${localStorage.getItem('route')}`)
-              })              
 }else{
               navigate('/office')
           }
@@ -69,9 +66,7 @@ navigate(`/${localStorage.getItem('route')}`)
                 dispatch(setUser(res))
                 if(localStorage.getItem('route')){  
                   // eslint-disable-next-line react-hooks/rules-of-hooks
-                  useEffect(()=>{   
   navigate(`/${localStorage.getItem('route')}`)
-                })              
   }else{
                 navigate('/office')
             }
