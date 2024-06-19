@@ -24,6 +24,8 @@ const handleWindowRefresh = () => {
           return res.json()
       }).then((res)=>{
           if(res&&!res.message){
+            dispatch(setAccessToken(localStorage.getItem('accessToken')))
+            dispatch(setIsLoggedIn(true))
               dispatch(setUser(res))
               if(localStorage.getItem('route')){  
                 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -37,13 +39,56 @@ navigate(`/${localStorage.getItem('route')}`)
             throw Error(`${res.message}`)
         }
       }).catch((error)=>{
-          console.log(error)
-        })      
-    }else{
-        if(localStorage.getItem('refreshToken')){
-console.log('refreshToken')
-        }
-     }
+        console.log(error)
+ if(localStorage.getItem('refreshToken')){
+        fetch(`${api_url+'auth/refreshToken/'+localStorage.getItem('refreshToken')}`,{
+            method: "GET",
+            headers: {
+              "Content-Length": "0"
+            }
+        })
+        .then((res)=>{
+            return res.json()
+        })
+        .then((res)=>{
+            if(res&&!res.message){
+           localStorage.setItem('accessToken',res.accessToken)
+           dispatch(setAccessToken(localStorage.getItem('accessToken')))
+           localStorage.setItem('refreshToken',res.refreshToken)
+
+           fetch(`${api_url+'auth/'+res.accessToken}`,{
+            method: "GET",
+            headers: {
+              "Content-Length": "0"
+            }
+        }).then((res)=>{
+            return res.json()
+        }).then((res)=>{
+            if(res&&!res.message){
+                dispatch(setIsLoggedIn(true))
+                dispatch(setUser(res))
+                if(localStorage.getItem('route')){  
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  useEffect(()=>{   
+  navigate(`/${localStorage.getItem('route')}`)
+                })              
+  }else{
+                navigate('/office')
+            }
+          }else{
+              throw Error(`${res.message}`)
+          }
+        })
+        }else{
+                throw Error (res.message)
+            }
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+       }
+    })      
+    }
     if(!localStorage.getItem('accessToken')&&!localStorage.getItem('refreshToken')){
         console.log('no tokens')
     }
