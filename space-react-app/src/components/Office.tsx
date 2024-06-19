@@ -29,10 +29,15 @@ const handleWindowRefresh = () => {
     }).then((res)=>{
         return res.json()
     }).then((res)=>{
-        if(res){
+        if(res&&!res.message){
             dispatch(setUser(res))
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            useEffect(() => {
             navigate('/office')
-        }
+            })
+        }else{
+        throw Error(`${res.message}`)
+    }
     }).catch((error)=>{
         console.log(error)
       })

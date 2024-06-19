@@ -23,7 +23,7 @@ const handleWindowRefresh = () => {
       }).then((res)=>{
           return res.json()
       }).then((res)=>{
-          if(res){
+          if(res&&!res.message){
               dispatch(setUser(res))
               if(localStorage.getItem('route')){  
                 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -33,6 +33,8 @@ navigate(`/${localStorage.getItem('route')}`)
 }else{
               navigate('/office')
           }
+        }else{
+            throw Error(`${res.message}`)
         }
       }).catch((error)=>{
           console.log(error)
