@@ -66,6 +66,13 @@ CheckLoggedIn()
                     <div className="col-md-4 p-2">
 <div className="border rounded shadow p-2">
 <h2>Cosa vuoi fare?</h2>
+
+<ol className="py-4">
+    <li>Aggiungere un pianeta</li>
+    <li>Modificare un pianeta</li>
+    <li>Aggiungere un pacchetto</li>
+    <li>Modificare un pacchetto</li>
+</ol>
 </div>
                     </div>
                     <div className="col-md-8 p-2">

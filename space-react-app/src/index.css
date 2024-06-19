@@ -64,3 +64,15 @@ a{
     background-repeat: no-repeat;
     background-size: cover;
 }
+ol{
+    li{
+        padding-top:2%;
+        padding-bottom: 2%;
+        cursor: pointer;
+        transition:1s;
+        &:hover{
+            color: red;
+            transition: 1s;
+        }
+    }
+}
