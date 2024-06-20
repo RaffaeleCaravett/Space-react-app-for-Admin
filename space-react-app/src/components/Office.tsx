@@ -10,7 +10,10 @@ const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
  const navigate = useNavigate()
  const [toDo,setToDo]= useState('addPlanet')
-localStorage.setItem('route','office')
+ const [addPlanetNameError,setAddPlanetNameError] = useState("")
+ const [addGalaxyNameError,setAddGalaxyNameError] = useState("")
+
+ localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
 // const dispatch = useDispatch()
 console.log(api_url)
@@ -22,40 +25,24 @@ const CheckLoggedIn =()=>{
  })
 }
 CheckLoggedIn()
-// const handleWindowRefresh = () => {
-//     if(window.performance.navigation.type == 1){
-//      if(localStorage.getItem('accessToken')){
-//       const token = localStorage.getItem('accessToken')
 
-//       fetch(`${api_url+'auth/'+token}`,{
-//         method: "GET",
-//         headers: {
-//           "Content-Length": "0"
-//         }
-//     }).then((res)=>{
-//         return res.json()
-//     }).then((res)=>{
-//         if(res&&!res.message){
-//             dispatch(setUser(res))
-//             // eslint-disable-next-line react-hooks/rules-of-hooks
-//             useEffect(() => {
-//             navigate('/office')
-//             })
-//         }else{
-//         throw Error(`${res.message}`)
-//     }
-//     }).catch((error)=>{
-//         console.log(error)
-//       })
-//      }else{
-//         if(localStorage.getItem('refreshToken')){
-// console.log('refreshToken')
-//         }
-//      }
-    
-//     }
-// }
-// window.addEventListener('load', handleWindowRefresh);
+const addPlanet = (e:Event) => {
+    e.preventDefault()
+    const planetName = document.getElementById('planetName') as HTMLInputElement
+    const galaxyName = document.getElementById('galaxyName') as HTMLInputElement
+
+    if(planetName.value.length==0){
+        setAddPlanetNameError("Inserisci un valore.")
+    }else{
+        setAddPlanetNameError("")
+    }
+    if(galaxyName.value.length==0){
+        setAddGalaxyNameError("Inserisci un valore.")
+    }else{
+        setAddGalaxyNameError("")
+    }
+
+} 
 
  return(
      <div className="container text-center">
@@ -85,12 +72,14 @@ CheckLoggedIn()
 <h3>Aggiungi un pianeta</h3>
 </div>
 <div className="col-md-12 py-5">
-    <form className="border rounded p-2 shadow w-75 m-auto">
+    <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{addPlanet(event!)}}>
         <label className="fs-4 p-3">Nome pianeta</label>
-        <input type="text" className="form-control w-75 m-auto" />
+        <input type="text" className="form-control w-75 m-auto" minLength={1} id="planetName"/>
+        <p className="text-danger">{addPlanetNameError}</p>
         <label className="fs-4 p-3">Nome galassia</label>
-        <input type="text" className="form-control w-75 m-auto" />
-        <button className="btn py-5">Aggiungi</button>
+        <input type="text" className="form-control w-75 m-auto" minLength={1} id="galaxyName"/>
+        <p className="text-danger">{addGalaxyNameError}</p>
+        <button className="btn py-5" type="submit">Aggiungi</button>
     </form>
 </div>
 </div>
