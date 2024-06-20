@@ -24,6 +24,7 @@ const handleWindowRefresh = () => {
           return res.json()
       }).then((res)=>{
           if(res&&!res.message){
+            if(res.role=='ADMIN'){
             dispatch(setAccessToken(localStorage.getItem('accessToken')))
             dispatch(setIsLoggedIn(true))
               dispatch(setUser(res))
@@ -35,7 +36,10 @@ navigate(`/${localStorage.getItem('route')}`)
         }else{
             throw Error(`${res.message}`)
         }
-      }).catch((error)=>{
+      }else{
+        throw Error("Il ruolo utente non è admin")
+      }
+    }).catch((error)=>{
         console.log(error)
  if(localStorage.getItem('refreshToken')){
         fetch(`${api_url+'auth/refreshToken/'+localStorage.getItem('refreshToken')}`,{
@@ -62,6 +66,7 @@ navigate(`/${localStorage.getItem('route')}`)
             return res.json()
         }).then((res)=>{
             if(res&&!res.message){
+             if(res.role=='ADMIN'){
                 dispatch(setIsLoggedIn(true))
                 dispatch(setUser(res))
                 if(localStorage.getItem('route')){  
@@ -70,9 +75,13 @@ navigate(`/${localStorage.getItem('route')}`)
   }else{
                 navigate('/office')
             }
-          }else{
+        }else{
+            throw Error("Il ruolo utente non è admin")
+          } 
+         }else{
               throw Error(`${res.message}`)
-          }
+          } 
+        
         })
         }else{
                 throw Error (res.message)
@@ -139,17 +148,27 @@ fetch(`${api_url}auth/${res.tokens.accessToken}`,{
 }).then((res)=>{
     return res.json()
 }).then((res)=>{
-    if(res){
+    if(res&&!res.message){
+        if(res.role=='ADMIN'){
         dispatch(setUser(res))
         navigate('/office')
+        }else{
+            localStorage.clear()
+            throw Error("Il ruolo dell'user non è admin")
+        }
+    }else{
+        throw Error(res.message)
     }
 }).catch((error)=>{
     dispatch(setAccessToken(""))
     dispatch(setIsLoggedIn(false))
     dispatch(setUser({}))
+    if(error!="Error: Il ruolo dell'user non è admin"){
     navigate("/home")
-    console.log(error)
-
+    }else{
+        console.log(error)
+    setLoginError(error.toString())
+    }
 })
             }
         }

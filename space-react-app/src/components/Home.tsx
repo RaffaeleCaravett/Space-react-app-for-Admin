@@ -54,6 +54,7 @@ const handleWindowRefresh = () => {
           return res.json()
       }).then((res)=>{
           if(res&&!res.message){
+if(res.role=='ADMIN'){
             dispatch(setAccessToken(localStorage.getItem('accessToken')))
             dispatch(setIsLoggedIn(true))
               dispatch(setUser(res))
@@ -61,6 +62,9 @@ const handleWindowRefresh = () => {
 navigate(`/${localStorage.getItem('route')}`)
 }else{
               navigate('/office')
+          }
+        }else{
+            throw Error("Il ruolo utente non è admin")
           }
         }else{
             throw Error(`${res.message}`)
@@ -92,6 +96,7 @@ navigate(`/${localStorage.getItem('route')}`)
             return res.json()
         }).then((res)=>{
             if(res&&!res.message){
+                if(res.role=='ADMIN'){
                 dispatch(setIsLoggedIn(true))
                 dispatch(setUser(res))
                 if(localStorage.getItem('route')){  
@@ -100,7 +105,10 @@ navigate(`/${localStorage.getItem('route')}`)
   }else{
                 navigate('/office')
             }
-          }else{
+        }else{
+            throw Error("Il ruolo utente non è admin")
+          } 
+        }else{
               throw Error(`${res.message}`)
           }
         })

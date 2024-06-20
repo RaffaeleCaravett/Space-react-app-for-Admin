@@ -69,11 +69,7 @@ const addPlanet = (e:Event) => {
                 }
             }
         }).catch((error)=>{
-        if(error=="Error: Accesso negato. Non sei un admin."){
-            setSavePlanetError("Accesso negato. Non sei un admin.")
-         }else{
-            setSavePlanetError("Qualcosa è successo nel salvataggio della richiesta.")
-         }
+            setSavePlanetError(error.toString())
         })
     }
 
