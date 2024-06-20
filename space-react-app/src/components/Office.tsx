@@ -3,8 +3,7 @@ import {  useSelector } from "react-redux";
 import { tokenInterface } from "../interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-// import { setUser } from "../redux/userSlice";
-// import { api } from "../redux/apiUrl";
+
 
 const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
@@ -12,11 +11,10 @@ const Office = () => {
  const [toDo,setToDo]= useState('addPlanet')
  const [addPlanetNameError,setAddPlanetNameError] = useState("")
  const [addGalaxyNameError,setAddGalaxyNameError] = useState("")
-
+const [savePlanetError,setSavePlanetError] = useState("")
  localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
-// const dispatch = useDispatch()
-console.log(api_url)
+const token = useSelector((state:any)=>state.accessToken.accessToken)
 const CheckLoggedIn =()=>{ 
     useEffect(() => {
  if(!isLoggedIn){
@@ -24,22 +22,59 @@ const CheckLoggedIn =()=>{
  }
  })
 }
+
 CheckLoggedIn()
+
+
 
 const addPlanet = (e:Event) => {
     e.preventDefault()
     const planetName = document.getElementById('planetName') as HTMLInputElement
     const galaxyName = document.getElementById('galaxyName') as HTMLInputElement
-
+  let count =0
     if(planetName.value.length==0){
         setAddPlanetNameError("Inserisci un valore.")
     }else{
         setAddPlanetNameError("")
+        count +=1
     }
     if(galaxyName.value.length==0){
         setAddGalaxyNameError("Inserisci un valore.")
     }else{
         setAddGalaxyNameError("")
+ count+=1
+    }
+    if(count==2){
+        console.log(token)
+        fetch(`${api_url}pianeti`,{
+            method:'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token||''}`
+              },
+              body: JSON.stringify(
+                  {nome:planetName.value,galassia:galaxyName.value}
+              ) 
+        }).then((res)=>{
+            return res.json()
+        }).then((res)=>{
+            if(res&&!res.message){
+                setSavePlanetError("")
+            console.log(res)
+            }else{
+                if(res&&res.message&&res.message=="Access Denied"){
+                    throw Error("Accesso negato. Non sei un admin.")
+                }else{
+                    throw Error(res.message||"Qualcosa è successo nel salvataggio della richiesta.")
+                }
+            }
+        }).catch((error)=>{
+        if(error=="Error: Accesso negato. Non sei un admin."){
+            setSavePlanetError("Accesso negato. Non sei un admin.")
+         }else{
+            setSavePlanetError("Qualcosa è successo nel salvataggio della richiesta.")
+         }
+        })
     }
 
 } 
@@ -79,7 +114,8 @@ const addPlanet = (e:Event) => {
         <label className="fs-4 p-3">Nome galassia</label>
         <input type="text" className="form-control w-75 m-auto" minLength={1} id="galaxyName"/>
         <p className="text-danger">{addGalaxyNameError}</p>
-        <button className="btn py-5" type="submit">Aggiungi</button>
+        {savePlanetError&&<p className="text-danger">{savePlanetError}</p>}
+        <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
     </form>
 </div>
 </div>
