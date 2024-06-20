@@ -79,7 +79,22 @@ CheckLoggedIn()
                     <div className="col-md-8 p-2">
 <div className="border rounded shadow p-2">
 <h2>Come on</h2>
-{toDo=='addPlanet'&&<h3>Aggiungi un pianeta</h3>}
+{toDo=='addPlanet'&&
+<div className="row">
+<div className="col-md-12">
+<h3>Aggiungi un pianeta</h3>
+</div>
+<div className="col-md-12 py-5">
+    <form className="border rounded p-2 shadow w-75 m-auto">
+        <label className="fs-4 p-3">Nome pianeta</label>
+        <input type="text" className="form-control w-75 m-auto" />
+        <label className="fs-4 p-3">Nome galassia</label>
+        <input type="text" className="form-control w-75 m-auto" />
+        <button className="btn py-5">Aggiungi</button>
+    </form>
+</div>
+</div>
+}
 {toDo=='modifyPlanet'&&<h3>Modifica un pianeta</h3>}
 {toDo=='addPackage'&&<h3>Aggiungi un pacchetto</h3>}
 {toDo=='modifyPackage'&&<h3>Modifica un pacchetto</h3>}
