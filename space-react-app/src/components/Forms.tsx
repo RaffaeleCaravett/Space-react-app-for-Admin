@@ -151,6 +151,7 @@ fetch(`${api_url}auth/${res.tokens.accessToken}`,{
     if(res&&!res.message){
         if(res.role=='ADMIN'){
         dispatch(setUser(res))
+        setLoginError("")
         navigate('/office')
         }else{
             localStorage.clear()
