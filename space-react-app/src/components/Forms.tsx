@@ -135,7 +135,7 @@ const fetchLogin = (email:string,password:string) =>{
             if(res&&res.message){
                 setLoginError(res.message)
             }else if(res&&!res.message){
-                dispatch(setAccessToken(res))
+                dispatch(setAccessToken(res.tokens.accessToken))
                 dispatch(setIsLoggedIn(true))
                 localStorage.setItem('accessToken',res.tokens.accessToken)
                 localStorage.setItem('refreshToken',res.tokens.refreshToken)
