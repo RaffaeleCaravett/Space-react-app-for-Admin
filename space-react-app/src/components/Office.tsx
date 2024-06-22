@@ -15,6 +15,8 @@ const [savePlanetError,setSavePlanetError] = useState("")
  localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
 const token = useSelector((state:any)=>state.accessToken.accessToken)
+const galassie = ["BLU","ROSSA","VERDE","ARANCIONE"]
+
 const CheckLoggedIn =()=>{ 
     useEffect(() => {
  if(!isLoggedIn){
@@ -108,7 +110,11 @@ const addPlanet = (e:Event) => {
         <input type="text" className="form-control w-75 m-auto" minLength={1} id="planetName"/>
         <p className="text-danger">{addPlanetNameError}</p>
         <label className="fs-4 p-3">Nome galassia</label>
-        <input type="text" className="form-control w-75 m-auto" minLength={1} id="galaxyName"/>
+        <select className="form-control w-75 m-auto" id="galaxyName">
+        <option value=""></option>
+        {galassie.map((g,key)=>          <option value={g} key={key}>{g}</option>
+)}
+        </select>
         <p className="text-danger">{addGalaxyNameError}</p>
         {savePlanetError&&<p className="text-danger">{savePlanetError}</p>}
         <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
