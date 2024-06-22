@@ -12,7 +12,8 @@ const Office = () => {
  const [addPlanetNameError,setAddPlanetNameError] = useState("")
  const [addGalaxyNameError,setAddGalaxyNameError] = useState("")
 const [savePlanetError,setSavePlanetError] = useState("")
- localStorage.setItem('route','office')
+const [savePlanetSuccess,setSavePlanetSuccess] = useState("")
+localStorage.setItem('route','office')
 const api_url = useSelector((state:any) => state.api.url)
 const token = useSelector((state:any)=>state.accessToken.accessToken)
 const galassie = ["BLU","ROSSA","VERDE","ARANCIONE"]
@@ -62,8 +63,10 @@ const addPlanet = (e:Event) => {
         }).then((res)=>{
             if(res&&!res.message){
                 setSavePlanetError("")
+                setSavePlanetSuccess("Pianeta salvato con successo")
             console.log(res)
             }else{
+                setSavePlanetSuccess("")
                 if(res&&res.message&&res.message=="Access Denied"){
                     throw Error("Accesso negato. Non sei un admin.")
                 }else{
@@ -76,7 +79,16 @@ const addPlanet = (e:Event) => {
     }
 
 } 
+const reset = () => {
+    setSavePlanetError("")
+    setSavePlanetSuccess("")
+}
 
+const [pianetaSelezionato,setPianetaSelezionato] = useState({
+    id:0,
+    nome:'',
+    galassia:''
+})
  return(
      <div className="container text-center">
              <div className="row py-5">
@@ -89,10 +101,10 @@ const addPlanet = (e:Event) => {
 <h2>Cosa vuoi fare?</h2>
 
 <ol className="py-4">
-    <li onClick={()=>{setToDo('addPlanet')}}>Aggiungere un pianeta</li>
-    <li onClick={()=>{setToDo('modifyPlanet')}}>Modificare un pianeta</li>
-    <li onClick={()=>{setToDo('addPackage')}}>Aggiungere un pacchetto</li>
-    <li onClick={()=>{setToDo('modifyPackage')}}>Modificare un pacchetto</li>
+    <li onClick={()=>{[setToDo('addPlanet'),reset()]}}>Aggiungere un pianeta</li>
+    <li onClick={()=>{[setToDo('modifyPlanet'),reset()]}}>Modificare un pianeta</li>
+    <li onClick={()=>{[setToDo('addPackage'),reset()]}}>Aggiungere un pacchetto</li>
+    <li onClick={()=>{[setToDo('modifyPackage'),reset()]}}>Modificare un pacchetto</li>
 </ol>
 </div>
                     </div>
@@ -117,12 +129,52 @@ const addPlanet = (e:Event) => {
         </select>
         <p className="text-danger">{addGalaxyNameError}</p>
         {savePlanetError&&<p className="text-danger">{savePlanetError}</p>}
+        {savePlanetSuccess&&<p className="text-success">{savePlanetSuccess}</p>}
         <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
     </form>
 </div>
 </div>
 }
-{toDo=='modifyPlanet'&&<h3>Modifica un pianeta</h3>}
+{toDo=='modifyPlanet'&&
+<div className="row">
+    <div className="col-md-12">
+<h3>Modifica un pianeta</h3>
+    </div>
+    <div className="col-md-12">
+    <div className="col-md-12 py-5">
+    <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{addPlanet(event!)}}>
+        <label >Id del pianeta selezionato </label>
+        <input type="text" className="form-control w-75 m-auto" readOnly placeholder={pianetaSelezionato.id.toString()}/>
+        <label className="fs-4 p-3">Nome pianeta</label>
+        <input type="text" className="form-control w-75 m-auto" minLength={1} id="planetName"
+        onChange={(e)=>setPianetaSelezionato(
+            {id:pianetaSelezionato.id,
+                nome:e.target.value,
+                galassia:pianetaSelezionato.galassia
+            }
+        )}
+        readOnly={!pianetaSelezionato.nome} value={pianetaSelezionato.nome||''}/>
+        <p className="text-danger">{addPlanetNameError}</p>
+        <label className="fs-4 p-3">Nome galassia</label>
+        <select className="form-control w-75 m-auto" id="galaxyName" onChange={(e)=>setPianetaSelezionato(
+{id:pianetaSelezionato.id,
+    nome:pianetaSelezionato.nome,
+    galassia:e.target.value
+}
+        )} disabled={!pianetaSelezionato.galassia} value={pianetaSelezionato.galassia||''}>
+        <option value=""></option>
+        {galassie.map((g,key)=>          <option value={g} key={key}>{g}</option>
+)}
+        </select>
+        <p className="text-danger">{addGalaxyNameError}</p>
+        {savePlanetError&&<p className="text-danger">{savePlanetError}</p>}
+        {savePlanetSuccess&&<p className="text-success">{savePlanetSuccess}</p>}
+        <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
+    </form>
+</div>
+    </div>
+</div>
+}
 {toDo=='addPackage'&&<h3>Aggiungi un pacchetto</h3>}
 {toDo=='modifyPackage'&&<h3>Modifica un pacchetto</h3>}
 </div>
