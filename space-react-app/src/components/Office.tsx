@@ -18,6 +18,31 @@ const api_url = useSelector((state:any) => state.api.url)
 const token = useSelector((state:any)=>state.accessToken.accessToken)
 const galassie = ["BLU","ROSSA","VERDE","ARANCIONE"]
 
+const [pianeti,setPianeti] = useState([])
+
+const getPianeti = () => {
+    fetch(`${api_url}pianeti/paginated`,{
+        method:"GET",
+        headers: {
+            "Content-Length": "0",
+            "Authorization": `Bearer ${token||''}`
+        }
+            }).then((res)=>{
+                return res.json()
+            }).then((res)=>{
+                if(res&&!res.message){
+console.log(res)
+setPianeti([])
+setPianeti(res.content)
+                }else if(res&&res.message){
+                    throw Error(res.message)
+                }else{
+                    throw Error("Qualcosa è successo nell'elaborazione della richiesta.")
+                }
+            }).catch((error)=>{
+                console.log(error)
+            })
+}
 const CheckLoggedIn =()=>{ 
     useEffect(() => {
  if(!isLoggedIn){
@@ -102,7 +127,7 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
 
 <ol className="py-4">
     <li onClick={()=>{[setToDo('addPlanet'),reset()]}}>Aggiungere un pianeta</li>
-    <li onClick={()=>{[setToDo('modifyPlanet'),reset()]}}>Modificare un pianeta</li>
+    <li onClick={()=>{[setToDo('modifyPlanet'),reset(),getPianeti()]}}>Modificare un pianeta</li>
     <li onClick={()=>{[setToDo('addPackage'),reset()]}}>Aggiungere un pacchetto</li>
     <li onClick={()=>{[setToDo('modifyPackage'),reset()]}}>Modificare un pacchetto</li>
 </ol>
@@ -141,6 +166,10 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
 <h3>Modifica un pianeta</h3>
     </div>
     <div className="col-md-12">
+        {pianeti && pianeti.length>0 && pianeti.map((pianeta:any,key:any) => 
+        <p className="fs-5" key={key}>{pianeta.nome}</p>
+        )}
+            </div>
     <div className="col-md-12 py-5">
     <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{addPlanet(event!)}}>
         <label >Id del pianeta selezionato </label>
@@ -172,7 +201,7 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
         <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
     </form>
 </div>
-    </div>
+
 </div>
 }
 {toDo=='addPackage'&&<h3>Aggiungi un pacchetto</h3>}
