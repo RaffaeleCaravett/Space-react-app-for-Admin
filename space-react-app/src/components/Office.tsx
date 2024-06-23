@@ -3,7 +3,8 @@ import {  useSelector } from "react-redux";
 import { tokenInterface } from "../interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import rightArrow from '../assets/right-arrow.png'
+import arrow from '../assets/arrow.png'
 
 const Office = () => {
  const isLoggedIn= useSelector((state:tokenInterface)=>state.accessToken.isLoggedIn)
@@ -18,10 +19,10 @@ const api_url = useSelector((state:any) => state.api.url)
 const token = useSelector((state:any)=>state.accessToken.accessToken)
 const galassie = ["BLU","ROSSA","VERDE","ARANCIONE"]
 
-const [pianeti,setPianeti] = useState([])
+const [pianeti,setPianeti] = useState<any>([])
 
-const getPianeti = () => {
-    fetch(`${api_url}pianeti/paginated`,{
+const getPianeti = (pagenumber?:number) => {
+    fetch(`${api_url}pianeti/paginated${pagenumber&&pagenumber>=0&&pagenumber<=pianeti.totalPages?'&page='+pagenumber:''}`,{
         method:"GET",
         headers: {
             "Content-Length": "0",
@@ -31,10 +32,9 @@ const getPianeti = () => {
                 return res.json()
             }).then((res)=>{
                 if(res&&!res.message){
-console.log(res)
 setPianeti([])
-setPianeti(res.content)
-                }else if(res&&res.message){
+setPianeti(res)
+}else if(res&&res.message){
                     throw Error(res.message)
                 }else{
                     throw Error("Qualcosa è successo nell'elaborazione della richiesta.")
@@ -89,7 +89,6 @@ const addPlanet = (e:Event) => {
             if(res&&!res.message){
                 setSavePlanetError("")
                 setSavePlanetSuccess("Pianeta salvato con successo")
-            console.log(res)
             }else{
                 setSavePlanetSuccess("")
                 if(res&&res.message&&res.message=="Access Denied"){
@@ -166,9 +165,13 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
 <h3>Modifica un pianeta</h3>
     </div>
     <div className="col-md-12">
-        {pianeti && pianeti.length>0 && pianeti.map((pianeta:any,key:any) => 
+        {pianeti &&  pianeti?.content && pianeti?.content.length>0 && pianeti?.content.map((pianeta:any,key:any) => 
         <p className="fs-5" key={key}>{pianeta.nome}</p>
         )}
+        <div className="d-flex justify-content-around w-25 m-auto">
+            <button className="btn shadow-none" title="Previous page" onClick={()=>{getPianeti(pianeti.number-1)}}><img src={arrow} alt=""  className="w-100"/></button>
+            <button className="btn shadow-none" title="Next page" onClick={()=>{getPianeti(pianeti.number+1)}}><img src={rightArrow} alt=""  className="w-100"/></button>
+        </div>
             </div>
     <div className="col-md-12 py-5">
     <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{addPlanet(event!)}}>
