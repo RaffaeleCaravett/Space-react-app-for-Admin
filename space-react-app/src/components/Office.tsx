@@ -106,6 +106,13 @@ const addPlanet = (e:Event) => {
 const reset = () => {
     setSavePlanetError("")
     setSavePlanetSuccess("")
+    setPianetaSelezionato(
+        {
+            id:0,
+            nome:'',
+            galassia:''
+        }
+    )
 }
 
 const [pianetaSelezionato,setPianetaSelezionato] = useState({
@@ -113,6 +120,46 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
     nome:'',
     galassia:''
 })
+
+const putPlanet = (event:Event, pianetaSelezionato:any)=>{
+    event.preventDefault()
+    if(pianetaSelezionato.id!=0||pianetaSelezionato.nome!=''&&pianetaSelezionato.galassia!=''){
+        fetch(`${api_url}pianeti/${pianetaSelezionato.id}`,{
+            method:'PUT',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token||''}`
+              },
+              body: JSON.stringify(
+                  pianetaSelezionato
+              ) 
+        }).then((res)=>{
+            return res.json()
+        }).then((res)=>{
+            if(res&&!res.message){
+                setSavePlanetError("")
+                setSavePlanetSuccess("Pianeta modificato con successo")
+                getPianeti()
+            }else{
+                setSavePlanetSuccess("")
+                if(res&&res.message&&res.message=="Access Denied"){
+                    throw Error("Accesso negato. Non sei un admin.")
+                }else{
+                    throw Error(res.message||"Qualcosa è successo nel salvataggio della richiesta.")
+                }
+            }
+        }).catch((error)=>{
+            setSavePlanetError(error.toString())
+        })
+    }
+
+}
+
+
+const addPacchetto = (event:Event)=>{
+    event?.preventDefault()
+}
+
  return(
      <div className="container text-center">
              <div className="row py-5">
@@ -166,7 +213,12 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
     </div>
     <div className="col-md-12">
         {pianeti &&  pianeti?.content && pianeti?.content.length>0 && pianeti?.content.map((pianeta:any,key:any) => 
-        <p className="fs-5" key={key}>{pianeta.nome}</p>
+        <p className="fs-5" key={key} onClick={()=>setPianetaSelezionato(
+            {id: pianeta.id,
+                nome:pianeta.nome,
+                galassia:pianeta.galassia
+            }
+        )}>{pianeta.nome}</p>
         )}
         <p className="fs-5"> Number {pianeti.number+1} page of {pianeti.totalPages} total</p>
         <div className="d-flex justify-content-around w-25 m-auto">
@@ -175,7 +227,7 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
         </div>
             </div>
     <div className="col-md-12 py-5">
-    <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{addPlanet(event!)}}>
+    <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{putPlanet(event!,pianetaSelezionato)}}>
         <label >Id del pianeta selezionato </label>
         <input type="text" className="form-control w-75 m-auto" readOnly placeholder={pianetaSelezionato.id.toString()}/>
         <label className="fs-4 p-3">Nome pianeta</label>
@@ -202,13 +254,22 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
         <p className="text-danger">{addGalaxyNameError}</p>
         {savePlanetError&&<p className="text-danger">{savePlanetError}</p>}
         {savePlanetSuccess&&<p className="text-success">{savePlanetSuccess}</p>}
-        <button className="btn py-5 shadow-none" type="submit">Aggiungi</button>
+        <button className="btn py-5 shadow-none" type="submit" disabled={pianetaSelezionato.nome==''&&pianetaSelezionato.galassia==''||pianetaSelezionato.id==0}>Modifica</button>
     </form>
 </div>
 
 </div>
 }
-{toDo=='addPackage'&&<h3>Aggiungi un pacchetto</h3>}
+{toDo=='addPackage'&&
+<div className="row">
+    <div className="col-md-12">
+    <h3>Aggiungi un pacchetto</h3>
+    </div>
+    <div className="col-md-12">
+<form onSubmit={()=>addPacchetto(event!)}></form>
+    </div>
+</div>
+}
 {toDo=='modifyPackage'&&<h3>Modifica un pacchetto</h3>}
 </div>
                 </div>
