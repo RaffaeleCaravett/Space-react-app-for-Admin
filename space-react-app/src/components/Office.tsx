@@ -22,7 +22,7 @@ const galassie = ["BLU","ROSSA","VERDE","ARANCIONE"]
 const [pianeti,setPianeti] = useState<any>([])
 
 const getPianeti = (pagenumber?:number) => {
-    fetch(`${api_url}pianeti/paginated${pagenumber&&pagenumber>=0&&pagenumber<=pianeti.totalPages?'&page='+pagenumber:''}`,{
+    fetch(`${api_url}pianeti/paginated${pagenumber&&pagenumber>=0&&pagenumber<=pianeti.totalPages-1?'?page='+pagenumber:''}`,{
         method:"GET",
         headers: {
             "Content-Length": "0",
@@ -168,6 +168,7 @@ const [pianetaSelezionato,setPianetaSelezionato] = useState({
         {pianeti &&  pianeti?.content && pianeti?.content.length>0 && pianeti?.content.map((pianeta:any,key:any) => 
         <p className="fs-5" key={key}>{pianeta.nome}</p>
         )}
+        <p className="fs-5"> Number {pianeti.number+1} page of {pianeti.totalPages} total</p>
         <div className="d-flex justify-content-around w-25 m-auto">
             <button className="btn shadow-none" title="Previous page" onClick={()=>{getPianeti(pianeti.number-1)}}><img src={arrow} alt=""  className="w-100"/></button>
             <button className="btn shadow-none" title="Next page" onClick={()=>{getPianeti(pianeti.number+1)}}><img src={rightArrow} alt=""  className="w-100"/></button>
