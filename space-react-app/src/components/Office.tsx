@@ -161,19 +161,46 @@ const tomorrow = new Date().getFullYear()+"-"+(new Date().getMonth()<10?'0'+(new
 
 const addPacchetto = (event:Event)=>{
     event?.preventDefault()
+    const id = (document.getElementById('addPackagePlanetId') as HTMLInputElement).value
     const prezzo = (document.getElementById('addPackagePrice') as HTMLInputElement).value
     const posti = (document.getElementById('addPackagePosti') as HTMLInputElement).value
     const da = (document.getElementById('addPackageDa') as HTMLInputElement).value
     const a = (document.getElementById('addPackageA') as HTMLInputElement).value
     if(addPackageSuccess!=""&&prezzo&&posti&&da&&a&&da<a){
-        console.log('yes')
-        setAddPackageSuccess("Pacchetto aggiunto.")
+fetch(`${api_url}pacchetto`,{
+    method:"POST",
+    headers:{
+        "Content-Type": "application/json",
+                "Authorization": `Bearer ${token||''}`
+              },
+              body: JSON.stringify({
+prezzo:prezzo,
+posti:posti,
+da:da,
+a:a,
+pianeta_id:[id]
+}) 
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    if(res&&!res.message){
         setAddPackageError("")
+        setAddPackageSuccess("Pacchetto aggiunto")
+    }else if(res && res.message){
+setAddPackageError(res.message)
+setAddPackageSuccess("")
+    }else if(res &&res.messageList){
+setAddPackageError(res.messageList)
+setAddPackageSuccess("")
+    }
+}).catch((error)=>{
+    console.log(error)
+})
+    }else if(!prezzo||!posti||!da||!a){
+        setAddPackageError("Assicurati di inserire tutti i valori del form")
     }else if(da>=a){
         setAddPackageError("La data 'da' non può essere maggiore o uguale alla data 'a'")
         console.log('no')
-    }else if(!prezzo||!posti||!da||!a){
-        setAddPackageError("Assicurati di inserire tutti i valori del form")
     }else if(addPackageSuccess==''){
         setAddPackageError("Ricerca il pianeta per inserire il pacchetto.")
     }
