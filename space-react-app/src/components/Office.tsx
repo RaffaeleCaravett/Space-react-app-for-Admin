@@ -382,8 +382,9 @@ setAddPackageError(res.messageList(0))
         {addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
         {addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
     </div>    
-    
+    <div className="row">
     <button className="btn pt-5 shadow-none" type="submit">Aggiungi pacchetto</button>
+    </div>
     </form>
     </div>
 </div>
