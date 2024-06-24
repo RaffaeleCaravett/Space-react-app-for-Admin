@@ -154,10 +154,16 @@ const putPlanet = (event:Event, pianetaSelezionato:any)=>{
     }
 
 }
-
+const today = new Date().toISOString().split('T')[0];
+const tomorrow = new Date().getFullYear()+"-"+(new Date().getMonth()<10?'0'+(new Date().getMonth()+1):new Date().getMonth()+1)+"-"+(new Date().getDate()+1)
 
 const addPacchetto = (event:Event)=>{
     event?.preventDefault()
+}
+
+const searchPianeta = (event:Event) =>{
+    event.preventDefault()
+
 }
 
  return(
@@ -265,8 +271,36 @@ const addPacchetto = (event:Event)=>{
     <div className="col-md-12">
     <h3>Aggiungi un pacchetto</h3>
     </div>
-    <div className="col-md-12">
-<form onSubmit={()=>addPacchetto(event!)}></form>
+    <div className="col-md-12 py-5">
+    <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>addPacchetto(event!)}>
+<label htmlFor="">Prezzo</label>
+<input type="number" className="form-control"  id="addPackagePrice"/>
+<label htmlFor="">Posti</label>
+<input type="number" className="form-control"  id="addPackagePosti"/>
+<label htmlFor="">Da? </label>
+<input type="date" className="form-control" min={today} id="addPackageDa"/>
+<label htmlFor="">A? </label>
+<input type="date" className="form-control" min={tomorrow} id="addPackageA"/>
+<label htmlFor="" className="pt-5">Su che pianeta? </label>
+<div className="row p-2">
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Id</label>
+<input type="number" className="form-control" id="addPackagePlanetId"/>
+    </div>
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Nome</label>
+<input type="text" className="form-control" id="addPackagePlanetName"/>
+    </div>
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Galassia</label>
+        <select className="form-control w-75 m-auto" id="addPackageGalaxyName" >
+        <option value=""></option>
+        {galassie.map((g,key)=>          <option value={g} key={key}>{g}</option>
+)}
+        </select>    
+        </div>
+        <button className="btn shadow-none m-auto" type="button" onClick={()=>{searchPianeta(event!)}}>Cerca Pianeta</button>
+    </div>    </form>
     </div>
 </div>
 }
