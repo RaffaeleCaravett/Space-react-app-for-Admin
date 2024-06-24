@@ -113,6 +113,8 @@ const reset = () => {
             galassia:''
         }
     )
+    setAddPackageError("")
+        setAddPackageSuccess("")
 }
 
 const [pianetaSelezionato,setPianetaSelezionato] = useState({
@@ -159,10 +161,60 @@ const tomorrow = new Date().getFullYear()+"-"+(new Date().getMonth()<10?'0'+(new
 
 const addPacchetto = (event:Event)=>{
     event?.preventDefault()
+    const prezzo = (document.getElementById('addPackagePrice') as HTMLInputElement).value
+    const posti = (document.getElementById('addPackagePosti') as HTMLInputElement).value
+    const da = (document.getElementById('addPackageDa') as HTMLInputElement).value
+    const a = (document.getElementById('addPackageA') as HTMLInputElement).value
+    if(addPackageSuccess!=""&&prezzo&&posti&&da&&a&&da<a){
+        console.log('yes')
+        setAddPackageSuccess("Pacchetto aggiunto.")
+        setAddPackageError("")
+    }else if(da>=a){
+        setAddPackageError("La data 'da' non può essere maggiore o uguale alla data 'a'")
+        console.log('no')
+    }else if(!prezzo||!posti||!da||!a){
+        setAddPackageError("Assicurati di inserire tutti i valori del form")
+    }else if(addPackageSuccess==''){
+        setAddPackageError("Ricerca il pianeta per inserire il pacchetto.")
+    }
 }
+
+const [addPackageError,setAddPackageError]= useState("")
+const [addPackageSuccess,setAddPackageSuccess]= useState("")
 
 const searchPianeta = (event:Event) =>{
     event.preventDefault()
+    const id = document.getElementById('addPackagePlanetId') as HTMLInputElement
+    const nome = document.getElementById('addPackagePlanetName') as HTMLInputElement
+    const galassia = document.getElementById('addPackageGalaxyName') as HTMLInputElement
+
+    if(id.value&&nome.value&&galassia.value){
+fetch(`${api_url}pianeti/byParameters?id=${id.value}&nome=${nome.value}&galassia=${galassia.value}`,{
+    method:"GET",
+    headers: {
+        "Content-Length": "0",
+        "Authorization": `Bearer ${token||''}`
+    }
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    if(res&&!res.message){
+        setAddPackageSuccess("Pianeta con id " + id.value + " trovato con successo")
+setAddPackageError("")
+    }else if(res&&res.message){
+        setAddPackageSuccess("")
+        setAddPackageError(res.message)
+    }else if (res&&res.messageList){
+        setAddPackageSuccess("")
+setAddPackageError(res.messageList(0))
+    }
+})
+
+
+    }else{
+        setAddPackageSuccess("")
+        setAddPackageError("Devi inserire tutti e tre i valori per ricercare un pianeta")
+    }
 
 }
 
@@ -300,7 +352,12 @@ const searchPianeta = (event:Event) =>{
         </select>    
         </div>
         <button className="btn shadow-none m-auto" type="button" onClick={()=>{searchPianeta(event!)}}>Cerca Pianeta</button>
-    </div>    </form>
+        {addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
+        {addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
+    </div>    
+    
+    <button className="btn pt-5 shadow-none" type="submit">Aggiungi pacchetto</button>
+    </form>
     </div>
 </div>
 }
