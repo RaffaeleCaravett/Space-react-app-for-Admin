@@ -245,6 +245,33 @@ setAddPackageError(res.messageList(0))
 
 }
 
+const searchPacchetto = (event:Event) => {
+event.preventDefault()
+
+const id =(document.getElementById('modifyPackageSearchId') as HTMLInputElement).value
+const price = (document.getElementById('modifyPackageSearchPrice') as HTMLInputElement).value
+const dateDa = (document.getElementById('modifyPackageSearchDateDa') as HTMLInputElement).value
+const dateA = (document.getElementById('modifyPackageSearchDateA') as HTMLInputElement).value
+
+if(id&&!price&&(!dateDa||!dateA)){
+    console.log('id')
+}else if(id&&price&&(!dateDa||!dateA)){
+    console.log('id and price')
+}else if(id&&!price&&dateDa&&dateA){
+    console.log('id and date')
+}else if(id&&price&&dateDa&&dateA){
+    console.log('id,price and date')
+}else if(!id&&price&&(!dateDa||!dateA)){
+    console.log('price')
+}else if(!id&&price&&dateDa&&dateA){
+    console.log('price and date')
+}else if(!id&&!price&&dateDa&&dateA){
+    console.log('date')
+}else[
+    console.error('Assicurati di inserire o l\'id o il prezzo o le due date.')
+]
+}
+
  return(
      <div className="container text-center">
              <div className="row py-5">
@@ -382,14 +409,49 @@ setAddPackageError(res.messageList(0))
         {addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
         {addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
     </div>    
-    <div className="row">
-    <button className="btn pt-5 shadow-none" type="submit">Aggiungi pacchetto</button>
+    <div className="row text-center">
+    <button className="btn pt-5 shadow-none m-auto" type="submit">Aggiungi pacchetto</button>
     </div>
     </form>
     </div>
 </div>
 }
-{toDo=='modifyPackage'&&<h3>Modifica un pacchetto</h3>}
+{toDo=='modifyPackage'&&
+<div className="row">
+    <div className="col-md-12">
+        <h3>Modifica un pacchetto</h3>
+        </div>
+    <div className="col-md-12">
+        <p>Che pacchetto vuoi modificare?</p>
+        <form onSubmit={()=>searchPacchetto(event!)}>
+<div className="row">
+    <div className="col-md-4">
+        <p className="fw-bold">Cerca per id</p>
+        <input type="number" className="form-control" id="modifyPackageSearchId"/>
+    </div>
+    <div className="col-md-4">
+        <p className="fw-bold">Cerca per prezzo</p>
+        <input type="number" className="form-control" id="modifyPackageSearchPrice"/>
+    </div>
+    <div className="col-md-4">
+        <p className="fw-bold">Cerca per date</p>
+        <div className="d-flex"> 
+        <label>Date 1</label>
+        <input type="date" className="form-control m-1" id="modifyPackageSearchDateDa"/>
+        </div>
+        <div className="d-flex">
+            <label>Date 2</label>
+        <input type="date" className="form-control m-1" id="modifyPackageSearchDateA"/>
+        </div>
+    </div>
+<div className="col-md-12">
+    <button className="btn shadow-none m-auto" type="submit">Cerca</button>
+</div>
+</div>
+        </form>
+    </div>
+</div>
+}
 </div>
                 </div>
              </div>
