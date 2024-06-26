@@ -425,15 +425,15 @@ if(id&&!price&&(!dateDa||!dateA)){
         <p>Che pacchetto vuoi modificare?</p>
         <form onSubmit={()=>searchPacchetto(event!)}>
 <div className="row">
-    <div className="col-md-4">
+    <div className="col-xl-4 col-md-6">
         <p className="fw-bold">Cerca per id</p>
         <input type="number" className="form-control" id="modifyPackageSearchId"/>
     </div>
-    <div className="col-md-4">
+    <div className="col-xl-4 col-md-6">
         <p className="fw-bold">Cerca per prezzo</p>
         <input type="number" className="form-control" id="modifyPackageSearchPrice"/>
     </div>
-    <div className="col-md-4">
+    <div className="col-xl-4 col-md-6">
         <p className="fw-bold">Cerca per date</p>
         <div className="d-flex"> 
         <label>Date 1</label>
