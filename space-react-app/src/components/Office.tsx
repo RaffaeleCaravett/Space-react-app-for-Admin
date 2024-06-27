@@ -245,6 +245,8 @@ setAddPackageError(res.messageList(0))
 
 }
 
+const [modifyPackageError,setModifyPackageError]= useState('')
+
 const searchPacchetto = (event:Event) => {
 event.preventDefault()
 
@@ -253,23 +255,46 @@ const price = (document.getElementById('modifyPackageSearchPrice') as HTMLInputE
 const dateDa = (document.getElementById('modifyPackageSearchDateDa') as HTMLInputElement).value
 const dateA = (document.getElementById('modifyPackageSearchDateA') as HTMLInputElement).value
 
+let parameters =''
+setModifyPackageError('')
 if(id&&!price&&(!dateDa||!dateA)){
-    console.log('id')
+    parameters ='?id='+id
 }else if(id&&price&&(!dateDa||!dateA)){
-    console.log('id and price')
+    parameters ='?id='+id+'&price='+price
 }else if(id&&!price&&dateDa&&dateA){
-    console.log('id and date')
+    parameters ='?id='+id+'&date1='+dateDa+'&date2='+dateA
 }else if(id&&price&&dateDa&&dateA){
-    console.log('id,price and date')
+    parameters ='?id='+id+'&price='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&price&&(!dateDa||!dateA)){
-    console.log('price')
+    parameters ='?price='+price
 }else if(!id&&price&&dateDa&&dateA){
-    console.log('price and date')
+    parameters ='?price='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&!price&&dateDa&&dateA){
-    console.log('date')
+    parameters ='?date1='+dateDa+'&date2='+dateA
 }else[
-    console.error('Assicurati di inserire o l\'id o il prezzo o le due date.')
+    setModifyPackageError('Assicurati di inserire o l\'id o il prezzo o le due date.')
 ]
+
+fetch(`${api_url}pacchetto${parameters}`,{
+    method:'POST',
+    headers:{
+         "Content-Length": "0",
+        "Authorization": `Bearer ${token||''}`
+    }
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    if(res&&!res.message){
+        setModifyPackageError('')
+    console.log(res)
+    }else if(res&&res.message){
+        throw Error(res.message)
+    }else if(res&&res.messageList){
+        throw Error(res.messageList[0])
+    }
+}).catch((error)=>{
+    setModifyPackageError(error.toString())
+})
 }
 
  return(
