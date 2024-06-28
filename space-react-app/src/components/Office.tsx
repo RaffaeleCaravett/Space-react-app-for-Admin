@@ -247,7 +247,7 @@ setAddPackageError(res.messageList(0))
 }
 
 const [modifyPackageError,setModifyPackageError]= useState('')
-const [packages,setPackages]= useState([])
+const [packages,setPackages] : any = useState('')
 
 
 const searchPacchetto = (event:Event) => {
@@ -287,9 +287,10 @@ fetch(`${api_url}pacchetto/byParametes${parameters}`,{
 }).then((res)=>{
     return res.json()
 }).then((res)=>{
+    setPackages('')
     if(res&&!res.message){
         setModifyPackageError('')
-    console.log(res)
+        setPackages(res)
     }else if(res&&res.message){
         throw Error(res.message)
     }else if(res&&res.messageList){
@@ -478,6 +479,12 @@ fetch(`${api_url}pacchetto/byParametes${parameters}`,{
 </div>
 <div className="col-md-12">
     <p className="text-danger">{modifyPackageError}</p>
+    {packages &&packages!='' && 
+    <ul>
+        {packages.content.map((p:any)=>
+        <div>{p}</div>)}
+        </ul>
+        }
 </div>
 </div>
         </form>
