@@ -115,6 +115,7 @@ const reset = () => {
     )
     setAddPackageError("")
         setAddPackageSuccess("")
+        setModifyPackageError('')
 }
 
 const [pianetaSelezionato,setPianetaSelezionato] = useState({
@@ -260,23 +261,23 @@ setModifyPackageError('')
 if(id&&!price&&(!dateDa||!dateA)){
     parameters ='?id='+id
 }else if(id&&price&&(!dateDa||!dateA)){
-    parameters ='?id='+id+'&price='+price
+    parameters ='?id='+id+'&prezzo='+price
 }else if(id&&!price&&dateDa&&dateA){
     parameters ='?id='+id+'&date1='+dateDa+'&date2='+dateA
 }else if(id&&price&&dateDa&&dateA){
-    parameters ='?id='+id+'&price='+price+'&date1='+dateDa+'&date2='+dateA
+    parameters ='?id='+id+'&prezzo='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&price&&(!dateDa||!dateA)){
     parameters ='?price='+price
 }else if(!id&&price&&dateDa&&dateA){
-    parameters ='?price='+price+'&date1='+dateDa+'&date2='+dateA
+    parameters ='?prezzo='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&!price&&dateDa&&dateA){
     parameters ='?date1='+dateDa+'&date2='+dateA
 }else[
     setModifyPackageError('Assicurati di inserire o l\'id o il prezzo o le due date.')
 ]
-
-fetch(`${api_url}pacchetto${parameters}`,{
-    method:'POST',
+if(parameters!=''){
+fetch(`${api_url}pacchetto/byParametes${parameters}`,{
+    method:'GET',
     headers:{
          "Content-Length": "0",
         "Authorization": `Bearer ${token||''}`
@@ -295,6 +296,7 @@ fetch(`${api_url}pacchetto${parameters}`,{
 }).catch((error)=>{
     setModifyPackageError(error.toString())
 })
+}
 }
 
  return(
@@ -471,6 +473,9 @@ fetch(`${api_url}pacchetto${parameters}`,{
     </div>
 <div className="col-md-12">
     <button className="btn shadow-none m-auto" type="submit">Cerca</button>
+</div>
+<div className="col-md-12">
+    <p className="text-danger">{modifyPackageError}</p>
 </div>
 </div>
         </form>
