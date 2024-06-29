@@ -116,6 +116,7 @@ const reset = () => {
     setAddPackageError("")
         setAddPackageSuccess("")
         setModifyPackageError('')
+        setPackages([])
 }
 
 const [pianetaSelezionato,setPianetaSelezionato] = useState({
@@ -247,10 +248,10 @@ setAddPackageError(res.messageList(0))
 }
 
 const [modifyPackageError,setModifyPackageError]= useState('')
-const [packages,setPackages] : any = useState('')
+const [packages,setPackages] = useState<any>([])
 
 
-const searchPacchetto = (event:Event) => {
+const searchPacchetto = (event:any,page?:number) => {
 event.preventDefault()
 
 const id =(document.getElementById('modifyPackageSearchId') as HTMLInputElement).value
@@ -269,7 +270,7 @@ if(id&&!price&&(!dateDa||!dateA)){
 }else if(id&&price&&dateDa&&dateA){
     parameters ='?id='+id+'&prezzo='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&price&&(!dateDa||!dateA)){
-    parameters ='?price='+price
+    parameters ='?prezzo='+price
 }else if(!id&&price&&dateDa&&dateA){
     parameters ='?prezzo='+price+'&date1='+dateDa+'&date2='+dateA
 }else if(!id&&!price&&dateDa&&dateA){
@@ -278,7 +279,7 @@ if(id&&!price&&(!dateDa||!dateA)){
     setModifyPackageError('Assicurati di inserire o l\'id o il prezzo o le due date.')
 ]
 if(parameters!=''){
-fetch(`${api_url}pacchetto/byParametes${parameters}`,{
+fetch(`${api_url}pacchetto/byParametes${parameters}&page=${page&&page>=0&&(packages&&packages.content&&page<=packages.totalPages-1)?page:0}`,{
     method:'GET',
     headers:{
          "Content-Length": "0",
@@ -287,7 +288,7 @@ fetch(`${api_url}pacchetto/byParametes${parameters}`,{
 }).then((res)=>{
     return res.json()
 }).then((res)=>{
-    setPackages('')
+    setPackages([])
     if(res&&!res.message){
         setModifyPackageError('')
         setPackages(res)
@@ -479,11 +480,17 @@ fetch(`${api_url}pacchetto/byParametes${parameters}`,{
 </div>
 <div className="col-md-12">
     <p className="text-danger">{modifyPackageError}</p>
-    {packages &&packages!='' && 
+    {packages && packages.content&&<div>
     <ul>
-        {packages.content.map((p:any)=>
-        <div>{p}</div>)}
+        {packages.content.map((p:any,key:number)=>
+        <div key={key}>{p.id}</div>)}
         </ul>
+        <p className="fs-5"> Number {packages.number+1} page of {packages.totalPages} total</p>
+        <div className="d-flex justify-content-around w-25 m-auto">
+            <button className="btn shadow-none" title="Previous page" onClick={(event)=>{searchPacchetto(event,packages.number-1)}}><img src={arrow} alt=""  className="w-100"/></button>
+            <button className="btn shadow-none" title="Next page" onClick={(event)=>{searchPacchetto(event,packages.number+1)}}><img src={rightArrow} alt=""  className="w-100"/></button>
+        </div>
+        </div>
         }
 </div>
 </div>
