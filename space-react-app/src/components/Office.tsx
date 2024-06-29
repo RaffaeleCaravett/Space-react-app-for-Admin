@@ -117,6 +117,7 @@ const reset = () => {
         setAddPackageSuccess("")
         setModifyPackageError('')
         setPackages([])
+        setSelectedPackage(null)
 }
 
 const [pianetaSelezionato,setPianetaSelezionato] = useState({
@@ -213,10 +214,18 @@ const [addPackageSuccess,setAddPackageSuccess]= useState("")
 
 const searchPianeta = (event:Event) =>{
     event.preventDefault()
-    const id = document.getElementById('addPackagePlanetId') as HTMLInputElement
-    const nome = document.getElementById('addPackagePlanetName') as HTMLInputElement
-    const galassia = document.getElementById('addPackageGalaxyName') as HTMLInputElement
-
+    let id ;
+    let nome;
+    let galassia ;
+    if(!selectedPackage){
+    id = document.getElementById('addPackagePlanetId') as HTMLInputElement
+    nome = document.getElementById('addPackagePlanetName') as HTMLInputElement
+    galassia = document.getElementById('addPackageGalaxyName') as HTMLInputElement
+    }else{
+        id = document.getElementById('putPackagePlanetId') as HTMLInputElement
+        nome = document.getElementById('putPackagePlanetName') as HTMLInputElement
+        galassia = document.getElementById('putPackageGalaxyName') as HTMLInputElement
+    }
     if(id.value&&nome.value&&galassia.value){
 fetch(`${api_url}pianeti/byParameters?id=${id.value}&nome=${nome.value}&galassia=${galassia.value}`,{
     method:"GET",
@@ -252,6 +261,7 @@ const [packages,setPackages] = useState<any>([])
 
 
 const searchPacchetto = (event:any,page?:number) => {
+    setSelectedPackage(null)
 event.preventDefault()
 
 const id =(document.getElementById('modifyPackageSearchId') as HTMLInputElement).value
@@ -302,6 +312,62 @@ fetch(`${api_url}pacchetto/byParametes${parameters}&page=${page&&page>=0&&(packa
 })
 }
 }
+
+const [selectedPackage, setSelectedPackage]:any = useState(null)
+
+
+const putPacchetto = (event:Event)=>{
+    setAddPackageError("")
+    if(selectedPackage){
+    event?.preventDefault()
+    const id = (document.getElementById('putPackagePlanetId') as HTMLInputElement).value
+    const prezzo = (document.getElementById('putPackagePrice') as HTMLInputElement).value
+    const posti = (document.getElementById('putPackagePosti') as HTMLInputElement).value
+    const da = (document.getElementById('putPackageDa') as HTMLInputElement).value
+    const a = (document.getElementById('putPackageA') as HTMLInputElement).value
+    if(addPackageSuccess!=""&&prezzo&&posti&&da&&a&&da<a){
+fetch(`${api_url}pacchetto/${selectedPackage.id}`,{
+    method:"PUT",
+    headers:{
+        "Content-Type": "application/json",
+                "Authorization": `Bearer ${token||''}`
+              },
+              body: JSON.stringify({
+prezzo:prezzo,
+posti:posti,
+da:da,
+a:a,
+pianeta_id:[id]
+}) 
+}).then((res)=>{
+    return res.json()
+}).then((res)=>{
+    if(res&&!res.message){
+        setAddPackageError("")
+        setAddPackageSuccess("Pacchetto modificato")
+    }else if(res && res.message){
+setAddPackageError(res.message)
+setAddPackageSuccess("")
+    }else if(res &&res.messageList){
+setAddPackageError(res.messageList)
+setAddPackageSuccess("")
+    }
+}).catch((error)=>{
+    console.log(error)
+})
+    }else if(!prezzo||!posti||!da||!a){
+        setAddPackageError("Assicurati di inserire tutti i valori del form")
+    }else if(da>=a){
+        setAddPackageError("La data 'da' non può essere maggiore o uguale alla data 'a'")
+        console.log('no')
+    }else if(addPackageSuccess==''){
+        setAddPackageError("Ricerca il pianeta per inserire il pacchetto.")
+    }
+}else{
+    setAddPackageError("Assicurati di selezionare un pacchetto tra quelli disponibili.")
+}
+}
+
 
  return(
      <div className="container text-center">
@@ -454,7 +520,7 @@ fetch(`${api_url}pacchetto/byParametes${parameters}&page=${page&&page>=0&&(packa
         </div>
     <div className="col-md-12">
         <p>Che pacchetto vuoi modificare?</p>
-        <form onSubmit={()=>searchPacchetto(event!)}>
+        <form >
 <div className="row">
     <div className="col-xl-4 col-md-6">
         <p className="fw-bold">Cerca per id</p>
@@ -476,22 +542,63 @@ fetch(`${api_url}pacchetto/byParametes${parameters}&page=${page&&page>=0&&(packa
         </div>
     </div>
 <div className="col-md-12">
-    <button className="btn shadow-none m-auto" type="submit">Cerca</button>
+    <button className="btn shadow-none m-auto" type="button" onClick={()=> searchPacchetto(event!)}>Cerca</button>
 </div>
 <div className="col-md-12">
     <p className="text-danger">{modifyPackageError}</p>
     {packages && packages.content&&<div>
     <ul>
         {packages.content.map((p:any,key:number)=>
-        <div key={key}>{p.id}</div>)}
+        <div className="p-2" key={key}>{p.id} - <button className="btn btn-light shadow-none" type="button" onClick={()=>setSelectedPackage(p)}>show</button></div>)}
         </ul>
         <p className="fs-5"> Number {packages.number+1} page of {packages.totalPages} total</p>
         <div className="d-flex justify-content-around w-25 m-auto">
             <button className="btn shadow-none" title="Previous page" onClick={(event)=>{searchPacchetto(event,packages.number-1)}}><img src={arrow} alt=""  className="w-100"/></button>
             <button className="btn shadow-none" title="Next page" onClick={(event)=>{searchPacchetto(event,packages.number+1)}}><img src={rightArrow} alt=""  className="w-100"/></button>
         </div>
+
+{selectedPackage!=null && 
+<div className="text-center">
+    <h2>Hai scelto questo pacchetto</h2>
+<label htmlFor="">Prezzo</label>
+<input type="number" className="form-control"  id="putPackagePrice" defaultValue={selectedPackage.prezzo}/>
+<label htmlFor="">Posti</label>
+<input type="number" className="form-control"  id="putPackagePosti" defaultValue={selectedPackage.posti}/>
+<label htmlFor="">Da? </label>
+<input type="date" className="form-control" min={today} id="putPackageDa" defaultValue={selectedPackage.da}/>
+<label htmlFor="">A? </label>
+<input type="date" className="form-control" min={tomorrow} id="putPackageA" defaultValue={selectedPackage.a}/>
+<label htmlFor="" className="pt-5">Su che pianeta? </label>
+<div className="row p-2">
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Id</label>
+<input type="number" className="form-control" id="putPackagePlanetId" defaultValue={selectedPackage.pianetas[0].id}/>
+    </div>
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Nome</label>
+<input type="text" className="form-control" id="putPackagePlanetName" defaultValue={selectedPackage.pianetas[0].nome}/>
+    </div>
+    <div className="col-md-4 p-2">
+        <label htmlFor="">Galassia</label>
+        <select className="form-control w-75 m-auto" id="putPackageGalaxyName" defaultValue={selectedPackage.pianetas[0].galassia}>
+        <option value=""></option>
+        {galassie.map((g,key)=>          <option value={g} key={key}>{g}</option>
+)}
+        </select>    
+        </div>
+        <button className="btn shadow-none m-auto" type="button" onClick={()=>{searchPianeta(event!)}}>Cerca Pianeta</button>
+        {addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
+        {addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
+    </div>    
+    <div className="row text-center">
+    <button className="btn pt-5 shadow-none m-auto" type="button" onClick={()=>putPacchetto(event!)}>Modifica pacchetto</button>
+    </div>
+</div>}
+
+
         </div>
         }
+
 </div>
 </div>
         </form>
