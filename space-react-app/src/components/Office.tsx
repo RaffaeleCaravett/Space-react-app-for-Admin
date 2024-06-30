@@ -404,7 +404,34 @@ throw Error(res.message)
 
 const deletePackage = (event:any,id:number) =>{
 event.preventDefault()
-console.log(id)
+if(id!=0){
+    fetch(`${api_url}pacchetto/${id}`, {
+        method: 'DELETE',
+        headers:{
+                    "Authorization": `Bearer ${token||''}`
+                  },
+      })
+      .then(res => res.json()) 
+      .then(res => { 
+                   if(res&&!res.message){
+        setAddPackageSuccess("Pacchetto con id " + id + " eliminato correttamente.")
+        setSelectedPackage(null)
+        setPackages([]);
+        (document.getElementById('modifyPackageSearchId') as HTMLInputElement).value='';
+        (document.getElementById('modifyPackageSearchPrice') as HTMLInputElement).value='';
+        (document.getElementById('modifyPackageSearchDateDa') as HTMLInputElement).value='';
+        (document.getElementById('modifyPackageSearchDateA') as HTMLInputElement).value='';
+    }else if(res &&res.message){
+throw Error(res.message)
+    }else if(res&&res.messageList){
+        throw Error(res.messageList[0])
+    }
+}
+      ).catch((error)=>{
+        setAddPackageError(error.toString())
+      })
+    }
+
 }
 
  return(
@@ -604,7 +631,7 @@ console.log(id)
 <div className="text-center">
     <h2>Hai scelto questo pacchetto</h2>
     <div className="p-3 d-flex justify-content-end">
-<button className="btn shadow-none" onClick={(event)=>deletePackage(event,selectedPackage.id)}>Elimina</button>
+<button className="btn shadow-none" type="button" onClick={(event)=>deletePackage(event,selectedPackage.id)}>Elimina</button>
     </div>
 <label htmlFor="">Prezzo</label>
 <input type="number" className="form-control"  id="putPackagePrice" defaultValue={selectedPackage.prezzo}/>
@@ -633,8 +660,7 @@ console.log(id)
         </select>    
         </div>
         <button className="btn shadow-none m-auto" type="button" onClick={()=>{searchPianeta(event!)}}>Cerca Pianeta</button>
-        {addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
-        {addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
+        
     </div>    
     <div className="row text-center">
     <button className="btn pt-5 shadow-none m-auto" type="button" onClick={()=>putPacchetto(event!)}>Modifica pacchetto</button>
@@ -644,7 +670,8 @@ console.log(id)
 
         </div>
         }
-
+{addPackageSuccess&& <p className="text-success m-auto">{addPackageSuccess}</p> }
+{addPackageError&& <p className="text-danger m-auto">{addPackageError}</p> }
 </div>
 </div>
         </form>
