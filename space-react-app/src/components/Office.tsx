@@ -368,6 +368,44 @@ setAddPackageSuccess("")
 }
 }
 
+const deletePianeta = (event:any,pianetaId:number)=>{
+    event.preventDefault()
+
+    if(pianetaId!=0){
+        fetch(`${api_url}pianeti/${pianetaId}`, {
+            method: 'DELETE',
+            headers:{
+                        "Authorization": `Bearer ${token||''}`
+                      },
+          })
+          .then(res => res.json()) 
+          .then(res => { 
+                       if(res&&!res.message){
+            setSavePlanetSuccess("Pianeta con id " + pianetaId + " eliminato correttamente.")
+            setPianetaSelezionato(
+                {
+                    id:0,
+                    nome:'',
+                    galassia:''
+                }
+            )
+        }else if(res &&res.message){
+throw Error(res.message)
+        }else if(res&&res.messageList){
+            throw Error(res.messageList[0])
+        }
+   }
+          ).catch((error)=>{
+            setSavePlanetError(error.toString())
+          })
+        }
+
+}
+
+const deletePackage = (event:any,id:number) =>{
+event.preventDefault()
+console.log(id)
+}
 
  return(
      <div className="container text-center">
@@ -422,12 +460,12 @@ setAddPackageSuccess("")
     </div>
     <div className="col-md-12">
         {pianeti &&  pianeti?.content && pianeti?.content.length>0 && pianeti?.content.map((pianeta:any,key:any) => 
-        <p className="fs-5" key={key} onClick={()=>setPianetaSelezionato(
+        <p className="fs-5" key={key} onClick={()=>[setPianetaSelezionato(
             {id: pianeta.id,
                 nome:pianeta.nome,
                 galassia:pianeta.galassia
             }
-        )}>{pianeta.nome}</p>
+        ),setSavePlanetSuccess(""),setSavePlanetError("")]}>{pianeta.nome}</p>
         )}
         <p className="fs-5"> Number {pianeti.number+1} page of {pianeti.totalPages} total</p>
         <div className="d-flex justify-content-around w-25 m-auto">
@@ -437,6 +475,11 @@ setAddPackageSuccess("")
             </div>
     <div className="col-md-12 py-5">
     <form className="border rounded p-2 shadow w-75 m-auto" onSubmit={()=>{putPlanet(event!,pianetaSelezionato)}}>
+        <div className="d-flex justify-content-end w-100 pb-4">
+        {pianetaSelezionato&& pianetaSelezionato.id!=0&&<button className="btn" onClick={(event)=>[deletePianeta(event,pianetaSelezionato.id),getPianeti()]}>
+                Elimina
+                </button>}
+                </div>
         <label >Id del pianeta selezionato </label>
         <input type="text" className="form-control w-75 m-auto" readOnly placeholder={pianetaSelezionato.id.toString()}/>
         <label className="fs-4 p-3">Nome pianeta</label>
@@ -560,6 +603,9 @@ setAddPackageSuccess("")
 {selectedPackage!=null && 
 <div className="text-center">
     <h2>Hai scelto questo pacchetto</h2>
+    <div className="p-3 d-flex justify-content-end">
+<button className="btn shadow-none" onClick={(event)=>deletePackage(event,selectedPackage.id)}>Elimina</button>
+    </div>
 <label htmlFor="">Prezzo</label>
 <input type="number" className="form-control"  id="putPackagePrice" defaultValue={selectedPackage.prezzo}/>
 <label htmlFor="">Posti</label>
